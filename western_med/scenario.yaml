@@ -113,17 +113,6 @@ components:
         - !!uk.ac.ox.poseidon.core.events.EventClearerFactory
           eventAccumulator: !!uk.ac.ox.poseidon.agents.tasks.fishing.FishingEventAccumulatorFactory {
             }
-        - !!uk.ac.ox.poseidon.io.tables.CsvTableWriterFactory
-          append: true
-          clearAfterWriting: true
-          path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
-            parent: &id021 !!uk.ac.ox.poseidon.io.paths.SimulationFolderFactory
-              parent: !!uk.ac.ox.poseidon.io.paths.RootPathFactory {
-                path: outputs
-              }
-            path: fishing_actions.csv
-          tableSupplier: !!uk.ac.ox.poseidon.agents.tables.FishingEventListenerTableFactory {
-            }
   fleet: !!uk.ac.ox.poseidon.agents.vessels.FleetFromVesselRegisterFactory
     activationEventCodes: [
       CEN,
@@ -229,7 +218,7 @@ components:
                     value: 0.1
                   }
               fisheableSupplier: !!uk.ac.ox.poseidon.agents.fisheables.CurrentCellFisheableFactory
-                fisheableGrid: !!uk.ac.ox.poseidon.biology.biomass.BiomassGridsFactory
+                fisheableGrid: !!uk.ac.ox.poseidon.biology.biomass.FisheableBiomassGridsFactory
                   biomassGrids: *id013
               guard: null
             - !!uk.ac.ox.poseidon.agents.tasks.travel.SetDestinationToOriginFactory {
@@ -306,6 +295,11 @@ components:
       }
     eventCodeColumn: event
     eventDateColumn: event_start_date
+    extraFactories:
+    - !!uk.ac.ox.poseidon.agents.choices.evaluation.TripEvaluatorFactory
+      evaluationProvider: !!uk.ac.ox.poseidon.agents.choices.evaluation.TotalBiomassCaughtPerHourDestinationEvaluationProviderFactory {
+        }
+      optionValues: *id010
     fleet: !!uk.ac.ox.poseidon.agents.vessels.FleetFactory
       marketGrid: *id019
       portGrid: *id006
@@ -316,14 +310,158 @@ components:
         code: null
       }
       factories:
-        PS: !!uk.ac.ox.poseidon.agents.vessels.gears.FixedBiomassProportionGearFactory
+        PS: !!uk.ac.ox.poseidon.agents.vessels.gears.BiomassProportionPerSpeciesGearFactory
           code: PS
           durationSupplier: *id018
-          proportion: 0.1
-        OTB: !!uk.ac.ox.poseidon.agents.vessels.gears.FixedBiomassProportionGearFactory
+          proportions: {
+            GLI: 0.1,
+            DRR: 0.1,
+            SPC: 0.1,
+            JRS: 0.1,
+            RJC: 0.1,
+            MTS: 0.1,
+            WHB: 0.1,
+            DBO: 0.1,
+            BFT: 0.1,
+            MUT;adult: 0.1,
+            BSH: 0.1,
+            OLV: 0.1,
+            SHO: 0.1,
+            SPW: 0.1,
+            HKE;juvenile: 0.1,
+            BOG: 0.1,
+            SYC: 0.1,
+            BON: 0.1,
+            DST: 0.1,
+            POD: 0.1,
+            OUM: 0.1,
+            SQE: 0.1,
+            OUL: 0.1,
+            CIL: 0.1,
+            HOM: 0.1,
+            ANE;adult: 0.1,
+            BOY: 0.1,
+            MAC: 0.1,
+            SQM: 0.1,
+            ARA: 0.1,
+            LKO: 0.1,
+            SAA: 0.1,
+            OQT: 0.1,
+            PIL;adult: 0.1,
+            PIL;juvenile: 0.1,
+            LKT: 0.1,
+            TSU: 0.1,
+            ANK: 0.1,
+            BLL: 0.1,
+            LXQ: 0.1,
+            GRQ: 0.1,
+            SRG: 0.1,
+            SRJ: 0.1,
+            LDB: 0.1,
+            TTL: 0.1,
+            SBA: 0.1,
+            JDP: 0.1,
+            HQB: 0.1,
+            COE: 0.1,
+            EOI: 0.1,
+            ANE;juvenile: 0.1,
+            LDV: 0.1,
+            SFS: 0.1,
+            HMM: 0.1,
+            SWO: 0.1,
+            VMA: 0.1,
+            JAA: 0.1,
+            MUT;juvenile: 0.1,
+            MON: 0.1,
+            OCC: 0.1,
+            SOO: 0.1,
+            PAC: 0.1,
+            FAM: 0.1,
+            SKM: 0.1,
+            BRF: 0.1,
+            ALB: 0.1,
+            HKE;adult: 0.1,
+            NEP: 0.1,
+            SCK: 0.1,
+            PIW: 0.1
+          }
+          species: *id003
+        OTB: !!uk.ac.ox.poseidon.agents.vessels.gears.BiomassProportionPerSpeciesGearFactory
           code: OTB
           durationSupplier: *id018
-          proportion: 0.1
+          proportions: {
+            GLI: 0.1,
+            DRR: 0.1,
+            SPC: 0.1,
+            JRS: 0.1,
+            RJC: 0.1,
+            MTS: 0.1,
+            WHB: 0.1,
+            DBO: 0.1,
+            BFT: 0.1,
+            MUT;adult: 0.1,
+            BSH: 0.1,
+            OLV: 0.1,
+            SHO: 0.1,
+            SPW: 0.1,
+            HKE;juvenile: 0.1,
+            BOG: 0.1,
+            SYC: 0.1,
+            BON: 0.1,
+            DST: 0.1,
+            POD: 0.1,
+            OUM: 0.1,
+            SQE: 0.1,
+            OUL: 0.1,
+            CIL: 0.1,
+            HOM: 0.1,
+            ANE;adult: 0.1,
+            BOY: 0.1,
+            MAC: 0.1,
+            SQM: 0.1,
+            ARA: 0.1,
+            LKO: 0.1,
+            SAA: 0.1,
+            OQT: 0.1,
+            PIL;adult: 0.1,
+            PIL;juvenile: 0.1,
+            LKT: 0.1,
+            TSU: 0.1,
+            ANK: 0.1,
+            BLL: 0.1,
+            LXQ: 0.1,
+            GRQ: 0.1,
+            SRG: 0.1,
+            SRJ: 0.1,
+            LDB: 0.1,
+            TTL: 0.1,
+            SBA: 0.1,
+            JDP: 0.1,
+            HQB: 0.1,
+            COE: 0.1,
+            EOI: 0.1,
+            ANE;juvenile: 0.1,
+            LDV: 0.1,
+            SFS: 0.1,
+            HMM: 0.1,
+            SWO: 0.1,
+            VMA: 0.1,
+            JAA: 0.1,
+            MUT;juvenile: 0.1,
+            MON: 0.1,
+            OCC: 0.1,
+            SOO: 0.1,
+            PAC: 0.1,
+            FAM: 0.1,
+            SKM: 0.1,
+            BRF: 0.1,
+            ALB: 0.1,
+            HKE;adult: 0.1,
+            NEP: 0.1,
+            SCK: 0.1,
+            PIW: 0.1
+          }
+          species: *id003
     hold: !!uk.ac.ox.poseidon.agents.vessels.holds.InfiniteBiomassHoldFactory
       catchCategoriser: !!uk.ac.ox.poseidon.agents.catches.UniformCatchCategoriserFactory
         catchCategory: !!uk.ac.ox.poseidon.agents.catches.CatchCategoryFactory {
@@ -341,5 +479,8 @@ components:
   directoryRemover: !!uk.ac.ox.poseidon.core.FinalProcessFactory
     process: !!uk.ac.ox.poseidon.io.DirectoryRemoverFactory
       ignoreIfAbsent: false
-      target: *id021
+      target: !!uk.ac.ox.poseidon.io.paths.SimulationFolderFactory
+        parent: !!uk.ac.ox.poseidon.io.paths.RootPathFactory {
+          path: outputs
+        }
 startingDateTime: 2013-01-01T00:00:00Z
