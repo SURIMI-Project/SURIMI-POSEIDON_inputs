@@ -31,7 +31,7 @@ components:
       unitString: kg,
       value: 10.0
     }
-  biomassGrids: &id013 !!uk.ac.ox.poseidon.core.MappedFactory
+  biomassGrids: &id014 !!uk.ac.ox.poseidon.core.MappedFactory
     componentListFactories:
     - *id003
     factory: !!uk.ac.ox.poseidon.biology.biomass.BiomassGridFactory
@@ -132,7 +132,7 @@ components:
               guard: null
               mainTask: !!uk.ac.ox.poseidon.agents.tasks.branches.SequenceTaskFactory
                 children:
-                - &id014 !!uk.ac.ox.poseidon.agents.tasks.general.VesselPredicateTaskFactory
+                - &id015 !!uk.ac.ox.poseidon.agents.tasks.general.VesselPredicateTaskFactory
                   guard: null
                   predicate: !!uk.ac.ox.poseidon.core.predicates.logical.AllOfFactory
                     predicates:
@@ -157,24 +157,26 @@ components:
                             !!java.time.DayOfWeek 'WEDNESDAY': null,
                             !!java.time.DayOfWeek 'THURSDAY': null
                           }
-                - &id015 !!uk.ac.ox.poseidon.agents.tasks.destinations.StartTripFactory
+                - &id016 !!uk.ac.ox.poseidon.agents.tasks.destinations.StartTripFactory
                   destinationSupplier: !!uk.ac.ox.poseidon.agents.choices.EpsilonGreedyDestinationSupplierFactory
                     epsilon: 0.2
                     exploiter: !!uk.ac.ox.poseidon.agents.choices.ImitatingPickerFactory
                       optionPredicate: &id011 !!uk.ac.ox.poseidon.agents.regulations.FishingLocationLegalityCheckerFactory
                         distance: *id008
-                        pathFinder: &id012 !!uk.ac.ox.poseidon.geography.paths.DefaultPathFinderFactory
+                        pathFinder: &id013 !!uk.ac.ox.poseidon.geography.paths.DefaultPathFinderFactory
                           bathymetricGrid: *id002
                           distance: *id008
                           portGrid: *id006
                         regulations: *id009
-                      optionValues: &id010 !!uk.ac.ox.poseidon.agents.choices.ExponentialMovingAverageOptionValuesFactory {
-                        alpha: 1.0
-                      }
+                      optionValues: &id012 !!uk.ac.ox.poseidon.agents.components.ComponentFactory
+                        componentFactory: !!uk.ac.ox.poseidon.agents.choices.ExponentialMovingAverageOptionValuesFactory {
+                          alpha: 1.0
+                        }
+                        componentRegister: &id010 !!uk.ac.ox.poseidon.agents.components.ComponentRegisterFactory {
+                          }
                       optionValuesSupplier: !!uk.ac.ox.poseidon.agents.choices.BestOptionsFromFriendsSupplierFactory
                         maxNumberOfFriends: 5
-                        optionValuesRegister: !!uk.ac.ox.poseidon.agents.registers.DynamicRegisterFactory
-                          vesselScopeFactory: *id010
+                        optionValuesRegister: *id010
                     explorer: !!uk.ac.ox.poseidon.agents.choices.NeighbourhoodGridExplorerFactory
                       cellPredicate: *id011
                       neighbourhoodSizeSupplier: !!uk.ac.ox.poseidon.core.suppliers.ShiftedIntSupplierFactory
@@ -182,11 +184,11 @@ components:
                           mean: 1.0
                         }
                         shift: 1
-                      optionValues: *id010
-                      pathFinder: *id012
+                      optionValues: *id012
+                      pathFinder: *id013
                   guard: null
                 guard: null
-              waitTask: &id016 !!uk.ac.ox.poseidon.agents.tasks.general.WaitFactory
+              waitTask: &id017 !!uk.ac.ox.poseidon.agents.tasks.general.WaitFactory
                 durationSupplier: !!uk.ac.ox.poseidon.core.suppliers.temporal.DurationUntilSupplierFactory
                   referenceDateTime: !!uk.ac.ox.poseidon.core.suppliers.temporal.NextDayAtTimeSupplierFactory
                     time: !!uk.ac.ox.poseidon.core.time.TimeFactory {
@@ -198,28 +200,163 @@ components:
             - !!uk.ac.ox.poseidon.agents.tasks.travel.TravelAlongPathFactory
               distance: *id008
               guard: null
-              pathFinder: *id012
-            - &id017 !!uk.ac.ox.poseidon.agents.tasks.fishing.FishingFactory
+              pathFinder: *id013
+            - !!uk.ac.ox.poseidon.agents.tasks.fishing.FishingFactory
               dispositionProcess: !!uk.ac.ox.poseidon.agents.catches.disposition.CompositeDispositionProcessFactory
                 dispositionStrategies:
-                - !!uk.ac.ox.poseidon.agents.catches.disposition.SelectedSpeciesRetentionFactory
-                  selectedSpecies: !!uk.ac.ox.poseidon.biology.species.SpeciesByCodeFactory
-                    speciesCodes: !!uk.ac.ox.poseidon.core.utils.ConstantFactory
-                      value: [
-                        PIL,
-                        ANE
-                      ]
-                      
-                    speciesList: *id003
+                - !!uk.ac.ox.poseidon.agents.catches.disposition.SpeciesSpecificDiscardRatesFactory
+                  discardRatesBySpeciesKey: {
+                    ALB: 0.05,
+                    ANE;adult: 0.05,
+                    ANE;juvenile: 0.05,
+                    ANK: 0.05,
+                    ARA: 0.05,
+                    BFT: 0.05,
+                    BLL: 0.05,
+                    BOG: 0.05,
+                    BON: 0.05,
+                    BOY: 0.05,
+                    BRF: 0.05,
+                    BSH: 0.05,
+                    CIL: 0.05,
+                    COE: 0.05,
+                    DBO: 0.05,
+                    DRR: 0.05,
+                    DST: 0.05,
+                    EOI: 0.05,
+                    FAM: 0.05,
+                    GLI: 0.05,
+                    GRQ: 0.05,
+                    HKE;adult: 0.05,
+                    HKE;juvenile: 0.05,
+                    HMM: 0.05,
+                    HOM: 0.05,
+                    HQB: 0.05,
+                    JAA: 0.05,
+                    JDP: 0.05,
+                    JRS: 0.05,
+                    LDB: 0.05,
+                    LDV: 0.05,
+                    LKO: 0.05,
+                    LKT: 0.05,
+                    LXQ: 0.05,
+                    MAC: 0.05,
+                    MON: 0.05,
+                    MTS: 0.05,
+                    MUT;adult: 0.05,
+                    MUT;juvenile: 0.05,
+                    NEP: 0.05,
+                    OCC: 0.05,
+                    OLV: 0.05,
+                    OQT: 0.05,
+                    OUL: 0.05,
+                    OUM: 0.05,
+                    PAC: 0.05,
+                    PIL;adult: 0.05,
+                    PIL;juvenile: 0.05,
+                    PIW: 0.05,
+                    POD: 0.05,
+                    RJC: 0.05,
+                    SAA: 0.05,
+                    SBA: 0.05,
+                    SCK: 0.05,
+                    SFS: 0.05,
+                    SHO: 0.05,
+                    SKM: 0.05,
+                    SOO: 0.05,
+                    SPC: 0.05,
+                    SPW: 0.05,
+                    SQE: 0.05,
+                    SQM: 0.05,
+                    SRG: 0.05,
+                    SRJ: 0.05,
+                    SWO: 0.05,
+                    SYC: 0.05,
+                    TSU: 0.05,
+                    TTL: 0.05,
+                    VMA: 0.05,
+                    WHB: 0.05
+                  }
+                  species: *id003
                 - !!uk.ac.ox.poseidon.agents.catches.disposition.ProportionallyLimitingBiomassToHoldFactory {
                   }
-                - !!uk.ac.ox.poseidon.agents.catches.disposition.GeneralDiscardMortalityFactory
-                  mortalityRateSupplier: !!uk.ac.ox.poseidon.core.suppliers.ConstantDoubleSupplierFactory {
-                    value: 0.1
+                - !!uk.ac.ox.poseidon.agents.catches.disposition.SpeciesSpecificDiscardMortalityRatesFactory
+                  mortalityRatesBySpeciesKey: {
+                    ALB: 0.1,
+                    ANE;adult: 0.1,
+                    ANE;juvenile: 0.1,
+                    ANK: 0.1,
+                    ARA: 0.1,
+                    BFT: 0.1,
+                    BLL: 0.1,
+                    BOG: 0.1,
+                    BON: 0.1,
+                    BOY: 0.1,
+                    BRF: 0.1,
+                    BSH: 0.1,
+                    CIL: 0.1,
+                    COE: 0.1,
+                    DBO: 0.1,
+                    DRR: 0.1,
+                    DST: 0.1,
+                    EOI: 0.1,
+                    FAM: 0.1,
+                    GLI: 0.1,
+                    GRQ: 0.1,
+                    HKE;adult: 0.1,
+                    HKE;juvenile: 0.1,
+                    HMM: 0.1,
+                    HOM: 0.1,
+                    HQB: 0.1,
+                    JAA: 0.1,
+                    JDP: 0.1,
+                    JRS: 0.1,
+                    LDB: 0.1,
+                    LDV: 0.1,
+                    LKO: 0.1,
+                    LKT: 0.1,
+                    LXQ: 0.1,
+                    MAC: 0.1,
+                    MON: 0.1,
+                    MTS: 0.1,
+                    MUT;adult: 0.1,
+                    MUT;juvenile: 0.1,
+                    NEP: 0.1,
+                    OCC: 0.1,
+                    OLV: 0.1,
+                    OQT: 0.1,
+                    OUL: 0.1,
+                    OUM: 0.1,
+                    PAC: 0.1,
+                    PIL;adult: 0.1,
+                    PIL;juvenile: 0.1,
+                    PIW: 0.1,
+                    POD: 0.1,
+                    RJC: 0.1,
+                    SAA: 0.1,
+                    SBA: 0.1,
+                    SCK: 0.1,
+                    SFS: 0.1,
+                    SHO: 0.1,
+                    SKM: 0.1,
+                    SOO: 0.1,
+                    SPC: 0.1,
+                    SPW: 0.1,
+                    SQE: 0.1,
+                    SQM: 0.1,
+                    SRG: 0.1,
+                    SRJ: 0.1,
+                    SWO: 0.1,
+                    SYC: 0.1,
+                    TSU: 0.1,
+                    TTL: 0.1,
+                    VMA: 0.1,
+                    WHB: 0.1
                   }
+                  species: *id003
               fisheableSupplier: !!uk.ac.ox.poseidon.agents.fisheables.CurrentCellFisheableFactory
                 fisheableGrid: !!uk.ac.ox.poseidon.biology.biomass.FisheableBiomassGridsFactory
-                  biomassGrids: *id013
+                  biomassGrids: *id014
               guard: null
             - !!uk.ac.ox.poseidon.agents.tasks.travel.SetDestinationToOriginFactory {
               guard: null
@@ -227,7 +364,7 @@ components:
             - !!uk.ac.ox.poseidon.agents.tasks.travel.TravelAlongPathFactory
               distance: *id008
               guard: null
-              pathFinder: *id012
+              pathFinder: *id013
             - !!uk.ac.ox.poseidon.agents.tasks.landings.LandCatchesFactory
               durationSupplier: &id018 !!uk.ac.ox.poseidon.core.utils.ConstantSupplierFactory
                 object: !!uk.ac.ox.poseidon.core.time.DurationFactory {
@@ -248,22 +385,178 @@ components:
               guard: null
               mainTask: !!uk.ac.ox.poseidon.agents.tasks.branches.SequenceTaskFactory
                 children:
-                - *id014
                 - *id015
+                - *id016
                 guard: null
-              waitTask: *id016
+              waitTask: *id017
             - !!uk.ac.ox.poseidon.agents.tasks.travel.TravelAlongPathFactory
               distance: *id008
               guard: null
-              pathFinder: *id012
-            - *id017
+              pathFinder: *id013
+            - !!uk.ac.ox.poseidon.agents.tasks.fishing.FishingFactory
+              dispositionProcess: !!uk.ac.ox.poseidon.agents.catches.disposition.CompositeDispositionProcessFactory
+                dispositionStrategies:
+                - !!uk.ac.ox.poseidon.agents.catches.disposition.SpeciesSpecificDiscardRatesFactory
+                  discardRatesBySpeciesKey: {
+                    ALB: 0.2,
+                    ANE;adult: 0.2,
+                    ANE;juvenile: 0.2,
+                    ANK: 0.2,
+                    ARA: 0.2,
+                    BFT: 0.2,
+                    BLL: 0.2,
+                    BOG: 0.2,
+                    BON: 0.2,
+                    BOY: 0.2,
+                    BRF: 0.2,
+                    BSH: 0.2,
+                    CIL: 0.2,
+                    COE: 0.2,
+                    DBO: 0.2,
+                    DRR: 0.2,
+                    DST: 0.2,
+                    EOI: 0.2,
+                    FAM: 0.2,
+                    GLI: 0.2,
+                    GRQ: 0.2,
+                    HKE;adult: 0.2,
+                    HKE;juvenile: 0.2,
+                    HMM: 0.2,
+                    HOM: 0.2,
+                    HQB: 0.2,
+                    JAA: 0.2,
+                    JDP: 0.2,
+                    JRS: 0.2,
+                    LDB: 0.2,
+                    LDV: 0.2,
+                    LKO: 0.2,
+                    LKT: 0.2,
+                    LXQ: 0.2,
+                    MAC: 0.2,
+                    MON: 0.2,
+                    MTS: 0.2,
+                    MUT;adult: 0.2,
+                    MUT;juvenile: 0.2,
+                    NEP: 0.2,
+                    OCC: 0.2,
+                    OLV: 0.2,
+                    OQT: 0.2,
+                    OUL: 0.2,
+                    OUM: 0.2,
+                    PAC: 0.2,
+                    PIL;adult: 0.2,
+                    PIL;juvenile: 0.2,
+                    PIW: 0.2,
+                    POD: 0.2,
+                    RJC: 0.2,
+                    SAA: 0.2,
+                    SBA: 0.2,
+                    SCK: 0.2,
+                    SFS: 0.2,
+                    SHO: 0.2,
+                    SKM: 0.2,
+                    SOO: 0.2,
+                    SPC: 0.2,
+                    SPW: 0.2,
+                    SQE: 0.2,
+                    SQM: 0.2,
+                    SRG: 0.2,
+                    SRJ: 0.2,
+                    SWO: 0.2,
+                    SYC: 0.2,
+                    TSU: 0.2,
+                    TTL: 0.2,
+                    VMA: 0.2,
+                    WHB: 0.2
+                  }
+                  species: *id003
+                - !!uk.ac.ox.poseidon.agents.catches.disposition.ProportionallyLimitingBiomassToHoldFactory {
+                  }
+                - !!uk.ac.ox.poseidon.agents.catches.disposition.SpeciesSpecificDiscardMortalityRatesFactory
+                  mortalityRatesBySpeciesKey: {
+                    ALB: 0.3,
+                    ANE;adult: 0.3,
+                    ANE;juvenile: 0.3,
+                    ANK: 0.3,
+                    ARA: 0.3,
+                    BFT: 0.3,
+                    BLL: 0.3,
+                    BOG: 0.3,
+                    BON: 0.3,
+                    BOY: 0.3,
+                    BRF: 0.3,
+                    BSH: 0.3,
+                    CIL: 0.3,
+                    COE: 0.3,
+                    DBO: 0.3,
+                    DRR: 0.3,
+                    DST: 0.3,
+                    EOI: 0.3,
+                    FAM: 0.3,
+                    GLI: 0.3,
+                    GRQ: 0.3,
+                    HKE;adult: 0.3,
+                    HKE;juvenile: 0.3,
+                    HMM: 0.3,
+                    HOM: 0.3,
+                    HQB: 0.3,
+                    JAA: 0.3,
+                    JDP: 0.3,
+                    JRS: 0.3,
+                    LDB: 0.3,
+                    LDV: 0.3,
+                    LKO: 0.3,
+                    LKT: 0.3,
+                    LXQ: 0.3,
+                    MAC: 0.3,
+                    MON: 0.3,
+                    MTS: 0.3,
+                    MUT;adult: 0.3,
+                    MUT;juvenile: 0.3,
+                    NEP: 0.3,
+                    OCC: 0.3,
+                    OLV: 0.3,
+                    OQT: 0.3,
+                    OUL: 0.3,
+                    OUM: 0.3,
+                    PAC: 0.3,
+                    PIL;adult: 0.3,
+                    PIL;juvenile: 0.3,
+                    PIW: 0.3,
+                    POD: 0.3,
+                    RJC: 0.3,
+                    SAA: 0.3,
+                    SBA: 0.3,
+                    SCK: 0.3,
+                    SFS: 0.3,
+                    SHO: 0.3,
+                    SKM: 0.3,
+                    SOO: 0.3,
+                    SPC: 0.3,
+                    SPW: 0.3,
+                    SQE: 0.3,
+                    SQM: 0.3,
+                    SRG: 0.3,
+                    SRJ: 0.3,
+                    SWO: 0.3,
+                    SYC: 0.3,
+                    TSU: 0.3,
+                    TTL: 0.3,
+                    VMA: 0.3,
+                    WHB: 0.3
+                  }
+                  species: *id003
+              fisheableSupplier: !!uk.ac.ox.poseidon.agents.fisheables.CurrentCellFisheableFactory
+                fisheableGrid: !!uk.ac.ox.poseidon.biology.biomass.FisheableBiomassGridsFactory
+                  biomassGrids: *id014
+              guard: null
             - !!uk.ac.ox.poseidon.agents.tasks.travel.SetDestinationToOriginFactory {
               guard: null
             }
             - !!uk.ac.ox.poseidon.agents.tasks.travel.TravelAlongPathFactory
               distance: *id008
               guard: null
-              pathFinder: *id012
+              pathFinder: *id013
             - !!uk.ac.ox.poseidon.agents.tasks.landings.LandCatchesFactory
               durationSupplier: *id018
               guard: null
@@ -299,7 +592,7 @@ components:
     - !!uk.ac.ox.poseidon.agents.choices.evaluation.TripEvaluatorFactory
       evaluationProvider: !!uk.ac.ox.poseidon.agents.choices.evaluation.TotalBiomassCaughtPerHourDestinationEvaluationProviderFactory {
         }
-      optionValues: *id010
+      optionValues: *id012
     fleet: !!uk.ac.ox.poseidon.agents.vessels.FleetFactory
       marketGrid: *id019
       portGrid: *id006
@@ -310,156 +603,156 @@ components:
         code: null
       }
       factories:
-        PS: !!uk.ac.ox.poseidon.agents.vessels.gears.BiomassProportionPerSpeciesGearFactory
+        PS: !!uk.ac.ox.poseidon.agents.vessels.gears.SpeciesSpecificBiomassCatchabilityGearFactory
           code: PS
           durationSupplier: *id018
           proportions: {
-            GLI: 0.1,
-            DRR: 0.1,
-            SPC: 0.1,
-            JRS: 0.1,
-            RJC: 0.1,
-            MTS: 0.1,
-            WHB: 0.1,
-            DBO: 0.1,
-            BFT: 0.1,
-            MUT;adult: 0.1,
-            BSH: 0.1,
-            OLV: 0.1,
-            SHO: 0.1,
-            SPW: 0.1,
-            HKE;juvenile: 0.1,
-            BOG: 0.1,
-            SYC: 0.1,
-            BON: 0.1,
-            DST: 0.1,
-            POD: 0.1,
-            OUM: 0.1,
-            SQE: 0.1,
-            OUL: 0.1,
-            CIL: 0.1,
-            HOM: 0.1,
+            ALB: 0.1,
             ANE;adult: 0.1,
-            BOY: 0.1,
-            MAC: 0.1,
-            SQM: 0.1,
+            ANE;juvenile: 0.1,
+            ANK: 0.1,
             ARA: 0.1,
+            BFT: 0.1,
+            BLL: 0.1,
+            BOG: 0.1,
+            BON: 0.1,
+            BOY: 0.1,
+            BRF: 0.1,
+            BSH: 0.1,
+            CIL: 0.1,
+            COE: 0.1,
+            DBO: 0.1,
+            DRR: 0.1,
+            DST: 0.1,
+            EOI: 0.1,
+            FAM: 0.1,
+            GLI: 0.1,
+            GRQ: 0.1,
+            HKE;adult: 0.1,
+            HKE;juvenile: 0.1,
+            HMM: 0.1,
+            HOM: 0.1,
+            HQB: 0.1,
+            JAA: 0.1,
+            JDP: 0.1,
+            JRS: 0.1,
+            LDB: 0.1,
+            LDV: 0.1,
             LKO: 0.1,
-            SAA: 0.1,
+            LKT: 0.1,
+            LXQ: 0.1,
+            MAC: 0.1,
+            MON: 0.1,
+            MTS: 0.1,
+            MUT;adult: 0.1,
+            MUT;juvenile: 0.1,
+            NEP: 0.1,
+            OCC: 0.1,
+            OLV: 0.1,
             OQT: 0.1,
+            OUL: 0.1,
+            OUM: 0.1,
+            PAC: 0.1,
             PIL;adult: 0.1,
             PIL;juvenile: 0.1,
-            LKT: 0.1,
-            TSU: 0.1,
-            ANK: 0.1,
-            BLL: 0.1,
-            LXQ: 0.1,
-            GRQ: 0.1,
+            PIW: 0.1,
+            POD: 0.1,
+            RJC: 0.1,
+            SAA: 0.1,
+            SBA: 0.1,
+            SCK: 0.1,
+            SFS: 0.1,
+            SHO: 0.1,
+            SKM: 0.1,
+            SOO: 0.1,
+            SPC: 0.1,
+            SPW: 0.1,
+            SQE: 0.1,
+            SQM: 0.1,
             SRG: 0.1,
             SRJ: 0.1,
-            LDB: 0.1,
-            TTL: 0.1,
-            SBA: 0.1,
-            JDP: 0.1,
-            HQB: 0.1,
-            COE: 0.1,
-            EOI: 0.1,
-            ANE;juvenile: 0.1,
-            LDV: 0.1,
-            SFS: 0.1,
-            HMM: 0.1,
             SWO: 0.1,
+            SYC: 0.1,
+            TSU: 0.1,
+            TTL: 0.1,
             VMA: 0.1,
-            JAA: 0.1,
-            MUT;juvenile: 0.1,
-            MON: 0.1,
-            OCC: 0.1,
-            SOO: 0.1,
-            PAC: 0.1,
-            FAM: 0.1,
-            SKM: 0.1,
-            BRF: 0.1,
-            ALB: 0.1,
-            HKE;adult: 0.1,
-            NEP: 0.1,
-            SCK: 0.1,
-            PIW: 0.1
+            WHB: 0.1
           }
           species: *id003
-        OTB: !!uk.ac.ox.poseidon.agents.vessels.gears.BiomassProportionPerSpeciesGearFactory
+        OTB: !!uk.ac.ox.poseidon.agents.vessels.gears.SpeciesSpecificBiomassCatchabilityGearFactory
           code: OTB
           durationSupplier: *id018
           proportions: {
-            GLI: 0.1,
-            DRR: 0.1,
-            SPC: 0.1,
-            JRS: 0.1,
-            RJC: 0.1,
-            MTS: 0.1,
-            WHB: 0.1,
-            DBO: 0.1,
-            BFT: 0.1,
-            MUT;adult: 0.1,
-            BSH: 0.1,
-            OLV: 0.1,
-            SHO: 0.1,
-            SPW: 0.1,
-            HKE;juvenile: 0.1,
-            BOG: 0.1,
-            SYC: 0.1,
-            BON: 0.1,
-            DST: 0.1,
-            POD: 0.1,
-            OUM: 0.1,
-            SQE: 0.1,
-            OUL: 0.1,
-            CIL: 0.1,
-            HOM: 0.1,
+            ALB: 0.1,
             ANE;adult: 0.1,
-            BOY: 0.1,
-            MAC: 0.1,
-            SQM: 0.1,
+            ANE;juvenile: 0.1,
+            ANK: 0.1,
             ARA: 0.1,
+            BFT: 0.1,
+            BLL: 0.1,
+            BOG: 0.1,
+            BON: 0.1,
+            BOY: 0.1,
+            BRF: 0.1,
+            BSH: 0.1,
+            CIL: 0.1,
+            COE: 0.1,
+            DBO: 0.1,
+            DRR: 0.1,
+            DST: 0.1,
+            EOI: 0.1,
+            FAM: 0.1,
+            GLI: 0.1,
+            GRQ: 0.1,
+            HKE;adult: 0.1,
+            HKE;juvenile: 0.1,
+            HMM: 0.1,
+            HOM: 0.1,
+            HQB: 0.1,
+            JAA: 0.1,
+            JDP: 0.1,
+            JRS: 0.1,
+            LDB: 0.1,
+            LDV: 0.1,
             LKO: 0.1,
-            SAA: 0.1,
+            LKT: 0.1,
+            LXQ: 0.1,
+            MAC: 0.1,
+            MON: 0.1,
+            MTS: 0.1,
+            MUT;adult: 0.1,
+            MUT;juvenile: 0.1,
+            NEP: 0.1,
+            OCC: 0.1,
+            OLV: 0.1,
             OQT: 0.1,
+            OUL: 0.1,
+            OUM: 0.1,
+            PAC: 0.1,
             PIL;adult: 0.1,
             PIL;juvenile: 0.1,
-            LKT: 0.1,
-            TSU: 0.1,
-            ANK: 0.1,
-            BLL: 0.1,
-            LXQ: 0.1,
-            GRQ: 0.1,
+            PIW: 0.1,
+            POD: 0.1,
+            RJC: 0.1,
+            SAA: 0.1,
+            SBA: 0.1,
+            SCK: 0.1,
+            SFS: 0.1,
+            SHO: 0.1,
+            SKM: 0.1,
+            SOO: 0.1,
+            SPC: 0.1,
+            SPW: 0.1,
+            SQE: 0.1,
+            SQM: 0.1,
             SRG: 0.1,
             SRJ: 0.1,
-            LDB: 0.1,
-            TTL: 0.1,
-            SBA: 0.1,
-            JDP: 0.1,
-            HQB: 0.1,
-            COE: 0.1,
-            EOI: 0.1,
-            ANE;juvenile: 0.1,
-            LDV: 0.1,
-            SFS: 0.1,
-            HMM: 0.1,
             SWO: 0.1,
+            SYC: 0.1,
+            TSU: 0.1,
+            TTL: 0.1,
             VMA: 0.1,
-            JAA: 0.1,
-            MUT;juvenile: 0.1,
-            MON: 0.1,
-            OCC: 0.1,
-            SOO: 0.1,
-            PAC: 0.1,
-            FAM: 0.1,
-            SKM: 0.1,
-            BRF: 0.1,
-            ALB: 0.1,
-            HKE;adult: 0.1,
-            NEP: 0.1,
-            SCK: 0.1,
-            PIW: 0.1
+            WHB: 0.1
           }
           species: *id003
     hold: !!uk.ac.ox.poseidon.agents.vessels.holds.InfiniteBiomassHoldFactory
