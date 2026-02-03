@@ -55,7 +55,7 @@ components:
     dateColumn: date
     measurementUnitColumn: measurement_unit
     portCodeColumn: market_code
-    portGrid: &id006 !!uk.ac.ox.poseidon.geography.ports.PortGridFromDataFactory
+    portGrid: &id006 !!uk.ac.ox.poseidon.geography.ports.ImmutablePortGridFromDataFactory
       bathymetricGrid: *id002
       data: !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
         dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
