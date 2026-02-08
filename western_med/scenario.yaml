@@ -786,4 +786,11 @@ components:
         parent: !!uk.ac.ox.poseidon.io.paths.RootPathFactory {
           path: outputs
         }
-startingDateTime: 2013-01-01T00:00:00Z
+startingDateTime: !!uk.ac.ox.poseidon.core.time.DateTimeFactory {
+  day: 1,
+  hour: 0,
+  minute: 0,
+  month: 1,
+  second: 0,
+  year: 2013
+}
