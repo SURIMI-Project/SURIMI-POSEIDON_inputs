@@ -1,6 +1,6 @@
 !!uk.ac.ox.poseidon.core.Scenario
 components:
-  species: &id005 !!uk.ac.ox.poseidon.biology.species.SpeciesFromDataFactory
+  species: &id006 !!uk.ac.ox.poseidon.biology.species.SpeciesFromDataFactory
     data: !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
       dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
         encoding: UTF-8
@@ -27,30 +27,31 @@ components:
           parent: *id001
           path: bathymetry_grid.asc
     path: *id002
-  carryingCapacityGrid: &id006 !!uk.ac.ox.poseidon.biology.biomass.CarryingCapacityGridFactory
+  carryingCapacityGrid: &id005 !!uk.ac.ox.poseidon.biology.biomass.CarryingCapacityGridFactory
     grid: !!uk.ac.ox.poseidon.geography.grids.DoubleGridFromAllocatorFactory
-      allocator: !!uk.ac.ox.poseidon.geography.allocators.ConstantAllocatorFactory
-        value: !!uk.ac.ox.poseidon.core.quantities.KilogramsFactory
-          mass: !!uk.ac.ox.poseidon.core.quantities.MassFactory {
-            unitString: kg,
-            value: 10.0
-          }
-      cellPredicate: !!uk.ac.ox.poseidon.geography.predicates.ActiveWaterCellPredicateFactory
-        bathymetricGrid: *id003
+      allocator: !!uk.ac.ox.poseidon.geography.allocators.FilteredAllocatorFactory
+        cellPredicate: !!uk.ac.ox.poseidon.geography.predicates.IsActiveWaterCellFactory
+          bathymetricGrid: *id003
+        delegateAllocator: !!uk.ac.ox.poseidon.geography.allocators.SupplierAllocatorFactory
+          doubleSupplier: !!uk.ac.ox.poseidon.core.suppliers.ConstantDoubleSupplierFactory
+            value: !!uk.ac.ox.poseidon.core.quantities.KilogramsFactory
+              mass: !!uk.ac.ox.poseidon.core.quantities.MassFactory {
+                unitString: kg,
+                value: 10.0
+              }
       modelGrid: *id004
   biomassGrids: &id015 !!uk.ac.ox.poseidon.core.MappedFactory
-    componentListFactories:
-    - *id005
     factory: !!uk.ac.ox.poseidon.biology.biomass.BiomassGridFactory
-      biomassAllocator: !!uk.ac.ox.poseidon.biology.allocators.ConstantProportionOfCarryingCapacityAllocatorFactory
-        carryingCapacityGrid: *id006
-        proportion: 1.0
+      biomassAllocator: !!uk.ac.ox.poseidon.biology.allocators.ProportionOfCarryingCapacityAllocatorFactory
+        carryingCapacityGrid: *id005
+        proportionSupplier: !!uk.ac.ox.poseidon.core.suppliers.ConstantDoubleSupplierFactory
+          value: !!uk.ac.ox.poseidon.core.utils.ConstantFactory {
+            value: 1.0
+          }
       modelGrid: *id004
       species: null
-    propertyNames: [
-      species
-    ]
-    
+    mappedProperties:
+      species: *id006
   marketGrid: &id020 !!uk.ac.ox.poseidon.agents.market.BiomassMarketGridFromPriceTableFactory
     categoryCodeColumn: category_code
     currencyColumn: currency
@@ -63,22 +64,23 @@ components:
     dateColumn: date
     measurementUnitColumn: measurement_unit
     portCodeColumn: market_code
-    portGrid: &id007 !!uk.ac.ox.poseidon.geography.ports.ImmutablePortGridFromDataFactory
+    portGrid: &id007 !!uk.ac.ox.poseidon.geography.ports.PortGridFactory
       bathymetricGrid: *id003
-      data: !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
-        dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
-          encoding: UTF-8
-          path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
-            parent: *id001
-            path: ports.csv
       distanceCalculator: &id009 !!uk.ac.ox.poseidon.geography.distance.HaversineDistanceCalculatorFactory
         modelGrid: *id004
-      latitudeColumn: lat
-      longitudeColumn: lon
-      nameColumn: port_name
-      portCodeColumn: port_code
+      ports: !!uk.ac.ox.poseidon.geography.ports.PortsFromTableFactory
+        latitudeColumnName: lat
+        longitudeColumnName: lon
+        portCodeColumnName: port_code
+        portNameColumnName: port_name
+        table: !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
+          dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
+            encoding: UTF-8
+            path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
+              parent: *id001
+              path: ports.csv
     priceColumn: price
-    species: *id005
+    species: *id006
     speciesCodeColumn: species_code
   portGrid: *id007
   regulations: &id010 !!uk.ac.ox.poseidon.regulations.ForbiddenIfFactory
@@ -285,7 +287,7 @@ components:
                     VMA: 0.05,
                     WHB: 0.05
                   }
-                  species: *id005
+                  species: *id006
                 - !!uk.ac.ox.poseidon.agents.catches.disposition.ProportionallyLimitingBiomassToHoldFactory {
                   }
                 - !!uk.ac.ox.poseidon.agents.catches.disposition.SpeciesSpecificDiscardMortalityRatesFactory
@@ -361,7 +363,7 @@ components:
                     VMA: 0.1,
                     WHB: 0.1
                   }
-                  species: *id005
+                  species: *id006
               fisheableSupplier: !!uk.ac.ox.poseidon.agents.fisheables.CurrentCellFisheableFactory
                 fisheableGrid: !!uk.ac.ox.poseidon.biology.biomass.FisheableBiomassGridsFactory
                   biomassGrids: *id015
@@ -477,7 +479,7 @@ components:
                     VMA: 0.2,
                     WHB: 0.2
                   }
-                  species: *id005
+                  species: *id006
                 - !!uk.ac.ox.poseidon.agents.catches.disposition.ProportionallyLimitingBiomassToHoldFactory {
                   }
                 - !!uk.ac.ox.poseidon.agents.catches.disposition.SpeciesSpecificDiscardMortalityRatesFactory
@@ -553,7 +555,7 @@ components:
                     VMA: 0.3,
                     WHB: 0.3
                   }
-                  species: *id005
+                  species: *id006
               fisheableSupplier: !!uk.ac.ox.poseidon.agents.fisheables.CurrentCellFisheableFactory
                 fisheableGrid: !!uk.ac.ox.poseidon.biology.biomass.FisheableBiomassGridsFactory
                   biomassGrids: *id015
@@ -686,7 +688,7 @@ components:
             VMA: 0.1,
             WHB: 0.1
           }
-          species: *id005
+          species: *id006
         OTB: !!uk.ac.ox.poseidon.agents.vessels.gears.SpeciesSpecificBiomassCatchabilityGearFactory
           code: OTB
           durationSupplier: *id019
@@ -762,7 +764,7 @@ components:
             VMA: 0.1,
             WHB: 0.1
           }
-          species: *id005
+          species: *id006
     hold: !!uk.ac.ox.poseidon.agents.vessels.holds.InfiniteBiomassHoldFactory
       catchCategoriser: !!uk.ac.ox.poseidon.agents.catches.UniformCatchCategoriserFactory
         catchCategory: !!uk.ac.ox.poseidon.agents.catches.CatchCategoryFactory {
