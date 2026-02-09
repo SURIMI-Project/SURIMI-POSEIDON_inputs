@@ -45,7 +45,7 @@ components:
       biomassAllocator: !!uk.ac.ox.poseidon.biology.allocators.ProportionOfCarryingCapacityAllocatorFactory
         carryingCapacityGrid: *id005
         proportionSupplier: !!uk.ac.ox.poseidon.core.suppliers.ConstantDoubleSupplierFactory
-          value: !!uk.ac.ox.poseidon.core.utils.ConstantFactory {
+          value: !!uk.ac.ox.poseidon.core.utils.ObjectFactory {
             value: 1.0
           }
       modelGrid: *id004
@@ -88,8 +88,8 @@ components:
       predicates:
       - !!uk.ac.ox.poseidon.regulations.predicates.spatial.ActionCellPredicateFactory
         cellPredicate: !!uk.ac.ox.poseidon.core.predicates.AdaptedPredicateFactory
-          adaptor: !!uk.ac.ox.poseidon.geography.bathymetry.adaptors.CellElevationFactory
-            bathymetricGrid: *id003
+          adaptor: !!uk.ac.ox.poseidon.geography.grids.adaptors.CellValueFactory
+            grid: *id003
           predicate: !!uk.ac.ox.poseidon.core.predicates.numeric.AboveFactory {
             threshold: -35.0
           }
@@ -115,7 +115,7 @@ components:
     startingDateTime: !!uk.ac.ox.poseidon.core.time.DateTimeAfterStartingFactory
       offset: *id008
     steppable: !!uk.ac.ox.poseidon.core.schedule.SteppableSequenceFactory
-      steppables: !!uk.ac.ox.poseidon.core.utils.Factories
+      steppables: !!uk.ac.ox.poseidon.core.utils.ListFactory
         factories:
         - !!uk.ac.ox.poseidon.core.events.EventClearerFactory
           eventAccumulator: !!uk.ac.ox.poseidon.agents.market.BiomassSaleAccumulatorFactory {
@@ -159,13 +159,13 @@ components:
                       adaptor: !!uk.ac.ox.poseidon.core.adaptors.temporal.CurrentDayOfWeekFactory {
                         }
                       predicate: !!uk.ac.ox.poseidon.core.predicates.InSetFactory
-                        values: !!uk.ac.ox.poseidon.core.utils.ConstantFactory
+                        values: !!uk.ac.ox.poseidon.core.utils.ObjectFactory
                           value: !!set {
-                            !!java.time.DayOfWeek 'SUNDAY': null,
                             !!java.time.DayOfWeek 'MONDAY': null,
-                            !!java.time.DayOfWeek 'TUESDAY': null,
+                            !!java.time.DayOfWeek 'SUNDAY': null,
                             !!java.time.DayOfWeek 'WEDNESDAY': null,
-                            !!java.time.DayOfWeek 'THURSDAY': null
+                            !!java.time.DayOfWeek 'THURSDAY': null,
+                            !!java.time.DayOfWeek 'TUESDAY': null
                           }
                 - &id017 !!uk.ac.ox.poseidon.agents.tasks.destinations.StartTripFactory
                   destinationSupplier: !!uk.ac.ox.poseidon.agents.choices.EpsilonGreedyDestinationSupplierFactory
@@ -222,6 +222,7 @@ components:
                     ANK: 0.05,
                     ARA: 0.05,
                     BFT: 0.05,
+                    BIB: 0.05,
                     BLL: 0.05,
                     BOG: 0.05,
                     BON: 0.05,
@@ -249,6 +250,7 @@ components:
                     LDV: 0.05,
                     LKO: 0.05,
                     LKT: 0.05,
+                    LQZ: 0.05,
                     LXQ: 0.05,
                     MAC: 0.05,
                     MON: 0.05,
@@ -280,11 +282,9 @@ components:
                     SQM: 0.05,
                     SRG: 0.05,
                     SRJ: 0.05,
-                    SWO: 0.05,
                     SYC: 0.05,
                     TSU: 0.05,
                     TTL: 0.05,
-                    VMA: 0.05,
                     WHB: 0.05
                   }
                   species: *id006
@@ -298,6 +298,7 @@ components:
                     ANK: 0.1,
                     ARA: 0.1,
                     BFT: 0.1,
+                    BIB: 0.1,
                     BLL: 0.1,
                     BOG: 0.1,
                     BON: 0.1,
@@ -325,6 +326,7 @@ components:
                     LDV: 0.1,
                     LKO: 0.1,
                     LKT: 0.1,
+                    LQZ: 0.1,
                     LXQ: 0.1,
                     MAC: 0.1,
                     MON: 0.1,
@@ -356,11 +358,9 @@ components:
                     SQM: 0.1,
                     SRG: 0.1,
                     SRJ: 0.1,
-                    SWO: 0.1,
                     SYC: 0.1,
                     TSU: 0.1,
                     TTL: 0.1,
-                    VMA: 0.1,
                     WHB: 0.1
                   }
                   species: *id006
@@ -414,6 +414,7 @@ components:
                     ANK: 0.2,
                     ARA: 0.2,
                     BFT: 0.2,
+                    BIB: 0.2,
                     BLL: 0.2,
                     BOG: 0.2,
                     BON: 0.2,
@@ -441,6 +442,7 @@ components:
                     LDV: 0.2,
                     LKO: 0.2,
                     LKT: 0.2,
+                    LQZ: 0.2,
                     LXQ: 0.2,
                     MAC: 0.2,
                     MON: 0.2,
@@ -472,11 +474,9 @@ components:
                     SQM: 0.2,
                     SRG: 0.2,
                     SRJ: 0.2,
-                    SWO: 0.2,
                     SYC: 0.2,
                     TSU: 0.2,
                     TTL: 0.2,
-                    VMA: 0.2,
                     WHB: 0.2
                   }
                   species: *id006
@@ -490,6 +490,7 @@ components:
                     ANK: 0.3,
                     ARA: 0.3,
                     BFT: 0.3,
+                    BIB: 0.3,
                     BLL: 0.3,
                     BOG: 0.3,
                     BON: 0.3,
@@ -517,6 +518,7 @@ components:
                     LDV: 0.3,
                     LKO: 0.3,
                     LKT: 0.3,
+                    LQZ: 0.3,
                     LXQ: 0.3,
                     MAC: 0.3,
                     MON: 0.3,
@@ -548,11 +550,9 @@ components:
                     SQM: 0.3,
                     SRG: 0.3,
                     SRJ: 0.3,
-                    SWO: 0.3,
                     SYC: 0.3,
                     TSU: 0.3,
                     TTL: 0.3,
-                    VMA: 0.3,
                     WHB: 0.3
                   }
                   species: *id006
@@ -623,6 +623,7 @@ components:
             ANK: 0.1,
             ARA: 0.1,
             BFT: 0.1,
+            BIB: 0.1,
             BLL: 0.1,
             BOG: 0.1,
             BON: 0.1,
@@ -650,6 +651,7 @@ components:
             LDV: 0.1,
             LKO: 0.1,
             LKT: 0.1,
+            LQZ: 0.1,
             LXQ: 0.1,
             MAC: 0.1,
             MON: 0.1,
@@ -681,11 +683,9 @@ components:
             SQM: 0.1,
             SRG: 0.1,
             SRJ: 0.1,
-            SWO: 0.1,
             SYC: 0.1,
             TSU: 0.1,
             TTL: 0.1,
-            VMA: 0.1,
             WHB: 0.1
           }
           species: *id006
@@ -699,6 +699,7 @@ components:
             ANK: 0.1,
             ARA: 0.1,
             BFT: 0.1,
+            BIB: 0.1,
             BLL: 0.1,
             BOG: 0.1,
             BON: 0.1,
@@ -726,6 +727,7 @@ components:
             LDV: 0.1,
             LKO: 0.1,
             LKT: 0.1,
+            LQZ: 0.1,
             LXQ: 0.1,
             MAC: 0.1,
             MON: 0.1,
@@ -757,11 +759,9 @@ components:
             SQM: 0.1,
             SRG: 0.1,
             SRJ: 0.1,
-            SWO: 0.1,
             SYC: 0.1,
             TSU: 0.1,
             TTL: 0.1,
-            VMA: 0.1,
             WHB: 0.1
           }
           species: *id006
