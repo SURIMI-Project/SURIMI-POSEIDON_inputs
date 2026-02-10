@@ -146,7 +146,7 @@ components:
                   guard: null
                   predicate: !!uk.ac.ox.poseidon.core.predicates.logical.AllOfFactory
                     predicates:
-                    - !!uk.ac.ox.poseidon.agents.vessels.AdaptedVesselPredicateFactory
+                    - !!uk.ac.ox.poseidon.core.predicates.AdaptedPredicateFactory
                       adaptor: !!uk.ac.ox.poseidon.core.adaptors.temporal.CurrentTimeFactory {
                         }
                       predicate: !!uk.ac.ox.poseidon.core.predicates.temporal.TimeIsAfterFactory
@@ -155,17 +155,17 @@ components:
                           minute: 59,
                           second: 59
                         }
-                    - !!uk.ac.ox.poseidon.agents.vessels.AdaptedVesselPredicateFactory
+                    - !!uk.ac.ox.poseidon.core.predicates.AdaptedPredicateFactory
                       adaptor: !!uk.ac.ox.poseidon.core.adaptors.temporal.CurrentDayOfWeekFactory {
                         }
                       predicate: !!uk.ac.ox.poseidon.core.predicates.InSetFactory
                         values: !!uk.ac.ox.poseidon.core.utils.ObjectFactory
                           value: !!set {
-                            !!java.time.DayOfWeek 'MONDAY': null,
-                            !!java.time.DayOfWeek 'SUNDAY': null,
+                            !!java.time.DayOfWeek 'TUESDAY': null,
                             !!java.time.DayOfWeek 'WEDNESDAY': null,
                             !!java.time.DayOfWeek 'THURSDAY': null,
-                            !!java.time.DayOfWeek 'TUESDAY': null
+                            !!java.time.DayOfWeek 'MONDAY': null,
+                            !!java.time.DayOfWeek 'SUNDAY': null
                           }
                 - &id017 !!uk.ac.ox.poseidon.agents.tasks.destinations.StartTripFactory
                   destinationSupplier: !!uk.ac.ox.poseidon.agents.choices.EpsilonGreedyDestinationSupplierFactory
@@ -198,7 +198,7 @@ components:
                       pathFinder: *id014
                   guard: null
                 guard: null
-              waitTask: &id018 !!uk.ac.ox.poseidon.agents.tasks.general.WaitFactory
+              waitTask: &id018 !!uk.ac.ox.poseidon.agents.tasks.general.WaitForFactory
                 durationSupplier: !!uk.ac.ox.poseidon.core.suppliers.temporal.DurationUntilSupplierFactory
                   referenceDateTime: !!uk.ac.ox.poseidon.core.suppliers.temporal.NextDayAtTimeSupplierFactory
                     time: !!uk.ac.ox.poseidon.core.time.TimeFactory {
@@ -376,10 +376,10 @@ components:
               guard: null
               pathFinder: *id014
             - !!uk.ac.ox.poseidon.agents.tasks.landings.LandCatchesFactory
-              durationSupplier: &id019 !!uk.ac.ox.poseidon.core.utils.ConstantSupplierFactory
+              durationSupplier: &id019 !!uk.ac.ox.poseidon.core.suppliers.ConstantSupplierFactory
                 object: !!uk.ac.ox.poseidon.core.time.DurationFactory {
-                  days: 1,
-                  hours: 0,
+                  days: 0,
+                  hours: 1,
                   minutes: 0,
                   seconds: 0
                 }
