@@ -161,11 +161,11 @@ components:
                       predicate: !!uk.ac.ox.poseidon.core.predicates.InSetFactory
                         values: !!uk.ac.ox.poseidon.core.utils.ObjectFactory
                           value: !!set {
-                            !!java.time.DayOfWeek 'THURSDAY': null,
-                            !!java.time.DayOfWeek 'WEDNESDAY': null,
-                            !!java.time.DayOfWeek 'TUESDAY': null,
+                            !!java.time.DayOfWeek 'SUNDAY': null,
                             !!java.time.DayOfWeek 'MONDAY': null,
-                            !!java.time.DayOfWeek 'SUNDAY': null
+                            !!java.time.DayOfWeek 'TUESDAY': null,
+                            !!java.time.DayOfWeek 'WEDNESDAY': null,
+                            !!java.time.DayOfWeek 'THURSDAY': null
                           }
                 - &id017 !!uk.ac.ox.poseidon.agents.tasks.destinations.StartTripFactory
                   destinationSupplier: !!uk.ac.ox.poseidon.agents.choices.EpsilonGreedyDestinationSupplierFactory
