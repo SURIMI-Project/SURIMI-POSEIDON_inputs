@@ -52,7 +52,7 @@ components:
       species: null
     mappedProperties:
       species: *id006
-  marketGrid: &id020 !!uk.ac.ox.poseidon.agents.market.BiomassMarketGridFromPriceTableFactory
+  marketGrid: &id021 !!uk.ac.ox.poseidon.agents.market.BiomassMarketGridFromPriceTableFactory
     categoryCodeColumn: category_code
     currencyColumn: currency
     data: !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
@@ -102,7 +102,7 @@ components:
               parent: *id001
               path: french_eez.asc
         modelGrid: *id004
-  vesselField: &id021 !!uk.ac.ox.poseidon.agents.fields.VesselFieldFactory
+  vesselField: &id022 !!uk.ac.ox.poseidon.agents.fields.VesselFieldFactory
     modelGrid: *id004
   modelGrid: *id004
   monthlyProcesses: !!uk.ac.ox.poseidon.core.schedule.ScheduledRepeatingFactory
@@ -118,10 +118,10 @@ components:
       steppables: !!uk.ac.ox.poseidon.core.utils.ListFactory
         factories:
         - !!uk.ac.ox.poseidon.core.events.EventClearerFactory
-          eventAccumulator: &id023 !!uk.ac.ox.poseidon.agents.market.BiomassSaleAccumulatorFactory {
+          eventAccumulator: &id024 !!uk.ac.ox.poseidon.agents.market.BiomassSaleAccumulatorFactory {
             }
         - !!uk.ac.ox.poseidon.core.events.EventClearerFactory
-          eventAccumulator: &id022 !!uk.ac.ox.poseidon.agents.tasks.fishing.FishingEventAccumulatorFactory {
+          eventAccumulator: &id023 !!uk.ac.ox.poseidon.agents.tasks.fishing.FishingEventAccumulatorFactory {
             }
   fleet: !!uk.ac.ox.poseidon.agents.vessels.FleetFromVesselRegisterFactory
     activationEventCodes: [
@@ -384,6 +384,17 @@ components:
                   seconds: 0
                 }
               guard: null
+            - !!uk.ac.ox.poseidon.agents.tasks.travel.RefuelFactory
+              fuelStationGrid: &id019 !!uk.ac.ox.poseidon.agents.fuel.FuelStationGridFactory
+                fuelStations: !!uk.ac.ox.poseidon.agents.fuel.OneFuelStationPerPortFactory
+                  portGrid: *id007
+                  pricePerLitres: !!uk.ac.ox.poseidon.agents.money.MoneyFactory {
+                    amount: 1.5,
+                    currencyUnit: EUR
+                  }
+                  pumpRateInLitresPerMinute: 400.0
+                portGrid: *id007
+              guard: null
             - !!uk.ac.ox.poseidon.agents.tasks.travel.EndTripFactory {
               guard: null
             }
@@ -576,6 +587,9 @@ components:
                   seconds: 0
                 }
               guard: null
+            - !!uk.ac.ox.poseidon.agents.tasks.travel.RefuelFactory
+              fuelStationGrid: *id019
+              guard: null
             - !!uk.ac.ox.poseidon.agents.tasks.travel.EndTripFactory {
               guard: null
             }
@@ -607,11 +621,11 @@ components:
         value: 3.0
       }
       fuelTank: !!uk.ac.ox.poseidon.agents.vessels.engines.SimpleFuelTankFactory
-        capacity: &id019 !!uk.ac.ox.poseidon.core.quantities.VolumeFactory {
+        capacity: &id020 !!uk.ac.ox.poseidon.core.quantities.VolumeFactory {
           unitString: l,
           value: 100000.0
         }
-        currentFuel: *id019
+        currentFuel: *id020
     eventCodeColumn: event
     eventDateColumn: event_start_date
     extraFactories:
@@ -620,9 +634,9 @@ components:
         }
       optionValues: *id013
     fleet: !!uk.ac.ox.poseidon.agents.vessels.FleetFactory
-      marketGrid: *id020
+      marketGrid: *id021
       portGrid: *id007
-      vesselField: *id021
+      vesselField: *id022
     gear: !!uk.ac.ox.poseidon.agents.vessels.VesselScopeFactoriesByCode
       code: null
       defaultFactory: !!uk.ac.ox.poseidon.agents.vessels.gears.InactiveGearFactory {
@@ -807,8 +821,8 @@ components:
     portCodeColumn: place_of_registration
     vesselIdColumn: cfr
     vesselNameColumn: name_of_vessel
-  fishingActionAccumulator: *id022
-  biomassSaleAccumulator: *id023
+  fishingActionAccumulator: *id023
+  biomassSaleAccumulator: *id024
   directoryRemover: !!uk.ac.ox.poseidon.core.FinalProcessFactory
     process: !!uk.ac.ox.poseidon.io.DirectoryRemoverFactory
       ignoreIfAbsent: false
