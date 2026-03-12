@@ -146,6 +146,47 @@ components:
                   guard: null
                   predicate: !!uk.ac.ox.poseidon.core.predicates.logical.AllOfFactory
                     predicates:
+                    - !!uk.ac.ox.poseidon.regulations.predicates.IsPermittedPredicateFactory
+                      actionFunction: !!uk.ac.ox.poseidon.agents.regulations.actions.DepartNowActionFunctionFactory {
+                        }
+                      regulations: !!eu.project.surimi.poseidon.regulations.TotalAllowableCatchQuotasFactory
+                        fleetSegmentMapper: !!eu.project.surimi.poseidon.server.fleet.FleetSegmentMapperFactory
+                          countryCodeTag: country_of_registration
+                          model: POSEIDON
+                          scale: Industrial
+                          vesselLengthClassMapper: !!uk.ac.ox.poseidon.core.utils.NumericIntervalToStringMapperFactory
+                            intervals:
+                            - {
+                              lowerBoundInclusive: 0.0,
+                              upperBoundExclusive: 6.0,
+                              value: VL0006
+                            }
+                            - {
+                              lowerBoundInclusive: 6.0,
+                              upperBoundExclusive: 12.0,
+                              value: VL0612
+                            }
+                            - {
+                              lowerBoundInclusive: 12.0,
+                              upperBoundExclusive: 18.0,
+                              value: VL1218
+                            }
+                            - {
+                              lowerBoundInclusive: 18.0,
+                              upperBoundExclusive: 24.0,
+                              value: VL1824
+                            }
+                            - {
+                              lowerBoundInclusive: 24.0,
+                              upperBoundExclusive: 40.0,
+                              value: VL2440
+                            }
+                            - {
+                              lowerBoundInclusive: 40.0,
+                              upperBoundExclusive: null,
+                              value: VL40XX
+                            }
+                          vesselLengthTag: loa
                     - !!uk.ac.ox.poseidon.core.predicates.ConditionFactory
                       extractor: !!uk.ac.ox.poseidon.core.extractors.temporal.CurrentTimeFactory {
                         }
@@ -171,7 +212,7 @@ components:
                   destinationSupplier: !!uk.ac.ox.poseidon.agents.choices.EpsilonGreedyDestinationSupplierFactory
                     epsilon: 0.2
                     exploiter: !!uk.ac.ox.poseidon.agents.choices.ImitatingPickerFactory
-                      optionPredicate: &id012 !!uk.ac.ox.poseidon.agents.regulations.FishingLocationLegalityCheckerFactory
+                      optionPredicate: &id012 !!uk.ac.ox.poseidon.agents.regulations.predicates.FishingLocationLegalityCheckerFactory
                         distance: *id009
                         pathFinder: &id014 !!uk.ac.ox.poseidon.geography.paths.DefaultPathFinderFactory
                           bathymetricGrid: *id003
