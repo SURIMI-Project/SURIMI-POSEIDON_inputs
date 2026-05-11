@@ -225,6 +225,10 @@ components:
                         pathFinder: &id015 !!uk.ac.ox.poseidon.geography.paths.DefaultPathFinderFactory
                           bathymetricGrid: *id003
                           distance: *id010
+                          pathCache: !!uk.ac.ox.poseidon.geography.paths.DefaultPathCacheFactory
+                            bathymetricGrid: *id003
+                            distance: *id010
+                            portGrid: *id007
                           portGrid: *id007
                         regulations: *id011
                       optionValues: &id014 !!uk.ac.ox.poseidon.agents.components.ComponentFactory
