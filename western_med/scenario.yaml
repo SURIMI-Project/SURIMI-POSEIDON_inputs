@@ -1,5 +1,10 @@
 !!uk.ac.ox.poseidon.core.Scenario
 components:
+  catchabilities: !!uk.ac.ox.poseidon.core.utils.ObjectFactory
+    value: {
+      ANE: 0.2,
+      PIL: 0.1
+    }
   species: &id006 !!uk.ac.ox.poseidon.biology.species.SpeciesFromDataFactory
     data: !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
       dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
@@ -40,7 +45,7 @@ components:
                 value: 10.0
               }
       modelGrid: *id004
-  biomassGrids: &id016 !!uk.ac.ox.poseidon.biology.biomass.BiomassGridsFactory
+  biomassGrids: &id019 !!uk.ac.ox.poseidon.biology.biomass.BiomassGridsFactory
     biomassAllocators: !!uk.ac.ox.poseidon.core.utils.ListFactory
       factories:
       - !!uk.ac.ox.poseidon.biology.allocators.ProportionOfCarryingCapacityAllocatorFactory
@@ -50,7 +55,7 @@ components:
         }
     modelGrid: *id004
     species: *id006
-  marketGrid: &id023 !!uk.ac.ox.poseidon.agents.market.BiomassMarketGridFromPriceTableFactory
+  marketGrid: &id026 !!uk.ac.ox.poseidon.agents.market.BiomassMarketGridFromPriceTableFactory
     categoryCodeColumn: gear_code
     currencyColumn: currency
     data: !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
@@ -101,7 +106,7 @@ components:
               path: french_eez.asc
         modelGrid: *id004
   totalAllowableCatchQuotas: &id009 !!uk.ac.ox.poseidon.core.schedule.ScheduledRepeatingFromStartFactory
-    interval: !!uk.ac.ox.poseidon.core.time.PeriodFactory {
+    interval: &id028 !!uk.ac.ox.poseidon.core.time.PeriodFactory {
       days: 1,
       months: 0,
       years: 0
@@ -112,7 +117,7 @@ components:
         countryCodeTag: country_of_registration
         model: POSEIDON
         scale: Industrial
-        vesselLengthClassMapper: &id017 !!uk.ac.ox.poseidon.core.functions.NumericIntervalToStringMapperFactory
+        vesselLengthClassMapper: &id020 !!uk.ac.ox.poseidon.core.functions.NumericIntervalToStringMapperFactory
           intervals:
           - {
             lowerBoundInclusive: 0.0,
@@ -145,7 +150,7 @@ components:
             value: VL40XX
           }
         vesselLengthTag: loa
-  vesselField: &id024 !!uk.ac.ox.poseidon.agents.fields.VesselFieldFactory
+  vesselField: &id027 !!uk.ac.ox.poseidon.agents.fields.VesselFieldFactory
     modelGrid: *id004
   modelGrid: *id004
   monthlyProcesses: !!uk.ac.ox.poseidon.core.schedule.ScheduledRepeatingFactory
@@ -161,12 +166,12 @@ components:
       steppables: !!uk.ac.ox.poseidon.core.utils.ListFactory
         factories:
         - !!uk.ac.ox.poseidon.core.events.EventClearerFactory
-          eventAccumulator: &id026 !!uk.ac.ox.poseidon.agents.market.BiomassSaleAccumulatorFactory {
+          eventAccumulator: &id033 !!uk.ac.ox.poseidon.agents.market.BiomassSaleAccumulatorFactory {
             }
         - !!uk.ac.ox.poseidon.core.events.EventClearerFactory
-          eventAccumulator: &id025 !!uk.ac.ox.poseidon.agents.tasks.fishing.FishingEventAccumulatorFactory {
+          eventAccumulator: &id032 !!uk.ac.ox.poseidon.agents.tasks.fishing.FishingEventAccumulatorFactory {
             }
-  fleet: !!uk.ac.ox.poseidon.agents.vessels.FleetFromVesselRegisterFactory
+  fleet: &id031 !!uk.ac.ox.poseidon.agents.vessels.FleetFromVesselRegisterFactory
     activationEventCodes: [
       CEN,
       CST,
@@ -181,11 +186,11 @@ components:
         PS: !!uk.ac.ox.poseidon.agents.tasks.BehaviourFactory
           rootTask: !!uk.ac.ox.poseidon.agents.tasks.branches.SequenceTaskFactory
             children:
-            - !!uk.ac.ox.poseidon.agents.tasks.general.SucceedOrWaitTaskFactory
+            - !!uk.ac.ox.poseidon.agents.tasks.general.SucceedOrWaitFactory
               guard: null
               mainTask: !!uk.ac.ox.poseidon.agents.tasks.branches.SequenceTaskFactory
                 children:
-                - &id018 !!uk.ac.ox.poseidon.agents.tasks.general.VesselPredicateTaskFactory
+                - &id021 !!uk.ac.ox.poseidon.agents.tasks.general.VesselPredicateTaskFactory
                   guard: null
                   predicate: !!uk.ac.ox.poseidon.core.predicates.logical.AllOfFactory
                     predicates:
@@ -214,7 +219,7 @@ components:
                             !!java.time.DayOfWeek 'WEDNESDAY': null,
                             !!java.time.DayOfWeek 'THURSDAY': null
                           }
-                - &id019 !!uk.ac.ox.poseidon.agents.tasks.destinations.StartTripFactory
+                - &id022 !!uk.ac.ox.poseidon.agents.tasks.destinations.StartTripFactory
                   destinationSupplier: !!uk.ac.ox.poseidon.agents.choices.EpsilonGreedyDestinationSupplierFactory
                     epsilon: 0.2
                     exploiter: !!uk.ac.ox.poseidon.agents.choices.ImitatingPickerFactory
@@ -229,17 +234,19 @@ components:
                             portGrid: *id007
                           portGrid: *id007
                         regulations: *id011
-                      optionValues: &id014 !!uk.ac.ox.poseidon.agents.components.ComponentFactory
+                      optionValues: &id014 !!uk.ac.ox.poseidon.agents.components.RegisteredVesselComponentFactory
                         componentFactory: !!uk.ac.ox.poseidon.agents.choices.ExponentialMovingAverageOptionValuesFactory {
                           alpha: 1.0
                         }
-                        componentRegister: &id012 !!uk.ac.ox.poseidon.agents.components.ComponentRegisterFactory {
+                        componentRegister: &id012 !!uk.ac.ox.poseidon.agents.components.VesselComponentRegisterFactory {
                           }
                       optionValuesSupplier: !!uk.ac.ox.poseidon.agents.choices.BestOptionsFromFriendsSupplierFactory
                         maxNumberOfFriends: 5
                         optionValuesRegister: *id012
                     explorer: !!uk.ac.ox.poseidon.agents.choices.NeighbourhoodGridExplorerFactory
                       cellPredicate: *id013
+                      fallbackCellPicker: !!uk.ac.ox.poseidon.agents.vessels.providers.CurrentCellFactory {
+                        }
                       neighbourhoodSizeSupplier: !!uk.ac.ox.poseidon.core.providers.ShiftedIntProviderFactory
                         delegateIntProvider: !!uk.ac.ox.poseidon.core.providers.random.RandomPoissonProviderFactory {
                           mean: 1.0
@@ -249,7 +256,7 @@ components:
                       pathFinder: *id015
                   guard: null
                 guard: null
-              waitTask: &id020 !!uk.ac.ox.poseidon.agents.tasks.general.WaitForFactory
+              waitTask: &id023 !!uk.ac.ox.poseidon.agents.tasks.general.WaitForFactory
                 durationSupplier: !!uk.ac.ox.poseidon.core.providers.temporal.DurationUntilProviderFactory
                   referenceDateTime: !!uk.ac.ox.poseidon.core.providers.temporal.NextDayAtTimeProviderFactory
                     time: !!uk.ac.ox.poseidon.core.time.TimeFactory {
@@ -265,159 +272,48 @@ components:
             - !!uk.ac.ox.poseidon.agents.tasks.fishing.FishingFactory
               dispositionProcess: !!uk.ac.ox.poseidon.agents.catches.disposition.CompositeDispositionProcessFactory
                 dispositionStrategies:
-                - !!uk.ac.ox.poseidon.agents.catches.disposition.SpeciesSpecificDiscardRatesFactory
-                  discardRatesBySpeciesKey: {
-                    ALB: 0.05,
-                    ANE;adult: 0.05,
-                    ANE;juvenile: 0.05,
-                    ANK: 0.05,
-                    ARA: 0.05,
-                    BFT: 0.05,
-                    BIB: 0.05,
-                    BLL: 0.05,
-                    BOG: 0.05,
-                    BON: 0.05,
-                    BOY: 0.05,
-                    BRF: 0.05,
-                    BSH: 0.05,
-                    CIL: 0.05,
-                    COE: 0.05,
-                    DBO: 0.05,
-                    DRR: 0.05,
-                    DST: 0.05,
-                    EOI: 0.05,
-                    FAM: 0.05,
-                    GLI: 0.05,
-                    GRQ: 0.05,
-                    HKE;adult: 0.05,
-                    HKE;juvenile: 0.05,
-                    HMM: 0.05,
-                    HOM: 0.05,
-                    HQB: 0.05,
-                    JAA: 0.05,
-                    JDP: 0.05,
-                    JRS: 0.05,
-                    LDB: 0.05,
-                    LDV: 0.05,
-                    LKO: 0.05,
-                    LKT: 0.05,
-                    LQZ: 0.05,
-                    LXQ: 0.05,
-                    MAC: 0.05,
-                    MON: 0.05,
-                    MTS: 0.05,
-                    MUT;adult: 0.05,
-                    MUT;juvenile: 0.05,
-                    NEP: 0.05,
-                    OCC: 0.05,
-                    OLV: 0.05,
-                    OQT: 0.05,
-                    OUL: 0.05,
-                    OUM: 0.05,
-                    PAC: 0.05,
-                    PIL;adult: 0.05,
-                    PIL;juvenile: 0.05,
-                    PIW: 0.05,
-                    POD: 0.05,
-                    RJC: 0.05,
-                    SAA: 0.05,
-                    SBA: 0.05,
-                    SCK: 0.05,
-                    SFS: 0.05,
-                    SHO: 0.05,
-                    SKM: 0.05,
-                    SOO: 0.05,
-                    SPC: 0.05,
-                    SPW: 0.05,
-                    SQE: 0.05,
-                    SQM: 0.05,
-                    SRG: 0.05,
-                    SRJ: 0.05,
-                    SYC: 0.05,
-                    TSU: 0.05,
-                    TTL: 0.05,
-                    WHB: 0.05
-                  }
+                - !!uk.ac.ox.poseidon.agents.catches.disposition.IndexedDiscardRatesFactory
+                  rateFunction: !!uk.ac.ox.poseidon.core.functions.ComposedFunctionFactory
+                    function1: &id016 !!uk.ac.ox.poseidon.core.functions.MultiKeyFromFunctionsFactory
+                      functions:
+                      - !!uk.ac.ox.poseidon.biology.species.SpeciesCodeExtractorFactory {
+                        }
+                      - !!uk.ac.ox.poseidon.biology.species.SpeciesLifeStageExtractorFactory {
+                        }
+                    function2: !!uk.ac.ox.poseidon.core.functions.MapValueExtractorFactory
+                      map: !!uk.ac.ox.poseidon.io.tables.MapFromTableFactory
+                        keyBuilder: &id017 !!uk.ac.ox.poseidon.io.tables.MultiKeyFromRowFactory
+                          keyColumnNames: [
+                            species_code,
+                            life_stage
+                          ]
+                          
+                        table: &id018 !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
+                          dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
+                            encoding: UTF-8
+                            path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
+                              parent: *id001
+                              path: species.csv
+                        valueBuilder: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFromValueFactory {
+                          value: 0.05
+                        }
                   species: *id006
                 - !!uk.ac.ox.poseidon.agents.catches.disposition.ProportionallyLimitingBiomassToHoldFactory {
                   }
-                - !!uk.ac.ox.poseidon.agents.catches.disposition.SpeciesSpecificDiscardMortalityRatesFactory
-                  mortalityRatesBySpeciesKey: {
-                    ALB: 0.1,
-                    ANE;adult: 0.1,
-                    ANE;juvenile: 0.1,
-                    ANK: 0.1,
-                    ARA: 0.1,
-                    BFT: 0.1,
-                    BIB: 0.1,
-                    BLL: 0.1,
-                    BOG: 0.1,
-                    BON: 0.1,
-                    BOY: 0.1,
-                    BRF: 0.1,
-                    BSH: 0.1,
-                    CIL: 0.1,
-                    COE: 0.1,
-                    DBO: 0.1,
-                    DRR: 0.1,
-                    DST: 0.1,
-                    EOI: 0.1,
-                    FAM: 0.1,
-                    GLI: 0.1,
-                    GRQ: 0.1,
-                    HKE;adult: 0.1,
-                    HKE;juvenile: 0.1,
-                    HMM: 0.1,
-                    HOM: 0.1,
-                    HQB: 0.1,
-                    JAA: 0.1,
-                    JDP: 0.1,
-                    JRS: 0.1,
-                    LDB: 0.1,
-                    LDV: 0.1,
-                    LKO: 0.1,
-                    LKT: 0.1,
-                    LQZ: 0.1,
-                    LXQ: 0.1,
-                    MAC: 0.1,
-                    MON: 0.1,
-                    MTS: 0.1,
-                    MUT;adult: 0.1,
-                    MUT;juvenile: 0.1,
-                    NEP: 0.1,
-                    OCC: 0.1,
-                    OLV: 0.1,
-                    OQT: 0.1,
-                    OUL: 0.1,
-                    OUM: 0.1,
-                    PAC: 0.1,
-                    PIL;adult: 0.1,
-                    PIL;juvenile: 0.1,
-                    PIW: 0.1,
-                    POD: 0.1,
-                    RJC: 0.1,
-                    SAA: 0.1,
-                    SBA: 0.1,
-                    SCK: 0.1,
-                    SFS: 0.1,
-                    SHO: 0.1,
-                    SKM: 0.1,
-                    SOO: 0.1,
-                    SPC: 0.1,
-                    SPW: 0.1,
-                    SQE: 0.1,
-                    SQM: 0.1,
-                    SRG: 0.1,
-                    SRJ: 0.1,
-                    SYC: 0.1,
-                    TSU: 0.1,
-                    TTL: 0.1,
-                    WHB: 0.1
-                  }
+                - !!uk.ac.ox.poseidon.agents.catches.disposition.IndexedDiscardMortalityFactory
+                  rateFunction: !!uk.ac.ox.poseidon.core.functions.ComposedFunctionFactory
+                    function1: *id016
+                    function2: !!uk.ac.ox.poseidon.core.functions.MapValueExtractorFactory
+                      map: !!uk.ac.ox.poseidon.io.tables.MapFromTableFactory
+                        keyBuilder: *id017
+                        table: *id018
+                        valueBuilder: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFromValueFactory {
+                          value: 0.1
+                        }
                   species: *id006
               fisheableSupplier: !!uk.ac.ox.poseidon.agents.fisheables.CurrentCellFisheableFactory
                 fisheableGrid: !!uk.ac.ox.poseidon.biology.biomass.FisheableBiomassGridsFactory
-                  biomassGrids: *id016
+                  biomassGrids: *id019
               guard: null
             - !!uk.ac.ox.poseidon.agents.tasks.travel.SetDestinationToOriginFactory {
               guard: null
@@ -428,7 +324,7 @@ components:
               pathFinder: *id015
             - !!uk.ac.ox.poseidon.agents.tasks.accounting.PayTripCostFactory
               tripCostExtractor: !!uk.ac.ox.poseidon.core.functions.ComposedFunctionFactory
-                function1: !!uk.ac.ox.poseidon.core.functions.MultiKeyFromFunctionsFactory
+                function1: &id029 !!uk.ac.ox.poseidon.core.functions.MultiKeyFromFunctionsFactory
                   functions:
                   - !!uk.ac.ox.poseidon.agents.vessels.extractors.tags.StringTagExtractorFactory {
                     tagName: country_of_registration
@@ -447,13 +343,13 @@ components:
                     function1: !!uk.ac.ox.poseidon.agents.vessels.extractors.tags.DoubleTagExtractorFactory {
                       tagName: loa
                     }
-                    function2: *id017
+                    function2: *id020
                   - !!uk.ac.ox.poseidon.agents.vessels.extractors.tags.StringTagExtractorFactory {
                     tagName: main_fishing_gear
                   }
                 function2: !!uk.ac.ox.poseidon.core.functions.MapValueExtractorFactory
                   map: !!uk.ac.ox.poseidon.io.tables.MapFromTableFactory
-                    keyBuilder: !!uk.ac.ox.poseidon.io.tables.MultiKeyFromRowFactory
+                    keyBuilder: &id030 !!uk.ac.ox.poseidon.io.tables.MultiKeyFromRowFactory
                       keyColumnNames: [
                         country_code,
                         year,
@@ -481,7 +377,7 @@ components:
                 }
               guard: null
             - !!uk.ac.ox.poseidon.agents.tasks.travel.RefuelFactory
-              fuelStationGrid: &id021 !!uk.ac.ox.poseidon.agents.fuel.FuelStationGridFactory
+              fuelStationGrid: &id024 !!uk.ac.ox.poseidon.agents.fuel.FuelStationGridFactory
                 fuelStations: !!uk.ac.ox.poseidon.agents.fuel.OneFuelStationPerPortFactory
                   portGrid: *id007
                   pricePerLitres: !!uk.ac.ox.poseidon.agents.money.MoneyFactory {
@@ -498,14 +394,14 @@ components:
         OTB: !!uk.ac.ox.poseidon.agents.tasks.BehaviourFactory
           rootTask: !!uk.ac.ox.poseidon.agents.tasks.branches.SequenceTaskFactory
             children:
-            - !!uk.ac.ox.poseidon.agents.tasks.general.SucceedOrWaitTaskFactory
+            - !!uk.ac.ox.poseidon.agents.tasks.general.SucceedOrWaitFactory
               guard: null
               mainTask: !!uk.ac.ox.poseidon.agents.tasks.branches.SequenceTaskFactory
                 children:
-                - *id018
-                - *id019
+                - *id021
+                - *id022
                 guard: null
-              waitTask: *id020
+              waitTask: *id023
             - !!uk.ac.ox.poseidon.agents.tasks.travel.TravelAlongPathFactory
               distance: *id010
               guard: null
@@ -513,159 +409,33 @@ components:
             - !!uk.ac.ox.poseidon.agents.tasks.fishing.FishingFactory
               dispositionProcess: !!uk.ac.ox.poseidon.agents.catches.disposition.CompositeDispositionProcessFactory
                 dispositionStrategies:
-                - !!uk.ac.ox.poseidon.agents.catches.disposition.SpeciesSpecificDiscardRatesFactory
-                  discardRatesBySpeciesKey: {
-                    ALB: 0.2,
-                    ANE;adult: 0.2,
-                    ANE;juvenile: 0.2,
-                    ANK: 0.2,
-                    ARA: 0.2,
-                    BFT: 0.2,
-                    BIB: 0.2,
-                    BLL: 0.2,
-                    BOG: 0.2,
-                    BON: 0.2,
-                    BOY: 0.2,
-                    BRF: 0.2,
-                    BSH: 0.2,
-                    CIL: 0.2,
-                    COE: 0.2,
-                    DBO: 0.2,
-                    DRR: 0.2,
-                    DST: 0.2,
-                    EOI: 0.2,
-                    FAM: 0.2,
-                    GLI: 0.2,
-                    GRQ: 0.2,
-                    HKE;adult: 0.2,
-                    HKE;juvenile: 0.2,
-                    HMM: 0.2,
-                    HOM: 0.2,
-                    HQB: 0.2,
-                    JAA: 0.2,
-                    JDP: 0.2,
-                    JRS: 0.2,
-                    LDB: 0.2,
-                    LDV: 0.2,
-                    LKO: 0.2,
-                    LKT: 0.2,
-                    LQZ: 0.2,
-                    LXQ: 0.2,
-                    MAC: 0.2,
-                    MON: 0.2,
-                    MTS: 0.2,
-                    MUT;adult: 0.2,
-                    MUT;juvenile: 0.2,
-                    NEP: 0.2,
-                    OCC: 0.2,
-                    OLV: 0.2,
-                    OQT: 0.2,
-                    OUL: 0.2,
-                    OUM: 0.2,
-                    PAC: 0.2,
-                    PIL;adult: 0.2,
-                    PIL;juvenile: 0.2,
-                    PIW: 0.2,
-                    POD: 0.2,
-                    RJC: 0.2,
-                    SAA: 0.2,
-                    SBA: 0.2,
-                    SCK: 0.2,
-                    SFS: 0.2,
-                    SHO: 0.2,
-                    SKM: 0.2,
-                    SOO: 0.2,
-                    SPC: 0.2,
-                    SPW: 0.2,
-                    SQE: 0.2,
-                    SQM: 0.2,
-                    SRG: 0.2,
-                    SRJ: 0.2,
-                    SYC: 0.2,
-                    TSU: 0.2,
-                    TTL: 0.2,
-                    WHB: 0.2
-                  }
+                - !!uk.ac.ox.poseidon.agents.catches.disposition.IndexedDiscardRatesFactory
+                  rateFunction: !!uk.ac.ox.poseidon.core.functions.ComposedFunctionFactory
+                    function1: *id016
+                    function2: !!uk.ac.ox.poseidon.core.functions.MapValueExtractorFactory
+                      map: !!uk.ac.ox.poseidon.io.tables.MapFromTableFactory
+                        keyBuilder: *id017
+                        table: *id018
+                        valueBuilder: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFromValueFactory {
+                          value: 0.2
+                        }
                   species: *id006
                 - !!uk.ac.ox.poseidon.agents.catches.disposition.ProportionallyLimitingBiomassToHoldFactory {
                   }
-                - !!uk.ac.ox.poseidon.agents.catches.disposition.SpeciesSpecificDiscardMortalityRatesFactory
-                  mortalityRatesBySpeciesKey: {
-                    ALB: 0.3,
-                    ANE;adult: 0.3,
-                    ANE;juvenile: 0.3,
-                    ANK: 0.3,
-                    ARA: 0.3,
-                    BFT: 0.3,
-                    BIB: 0.3,
-                    BLL: 0.3,
-                    BOG: 0.3,
-                    BON: 0.3,
-                    BOY: 0.3,
-                    BRF: 0.3,
-                    BSH: 0.3,
-                    CIL: 0.3,
-                    COE: 0.3,
-                    DBO: 0.3,
-                    DRR: 0.3,
-                    DST: 0.3,
-                    EOI: 0.3,
-                    FAM: 0.3,
-                    GLI: 0.3,
-                    GRQ: 0.3,
-                    HKE;adult: 0.3,
-                    HKE;juvenile: 0.3,
-                    HMM: 0.3,
-                    HOM: 0.3,
-                    HQB: 0.3,
-                    JAA: 0.3,
-                    JDP: 0.3,
-                    JRS: 0.3,
-                    LDB: 0.3,
-                    LDV: 0.3,
-                    LKO: 0.3,
-                    LKT: 0.3,
-                    LQZ: 0.3,
-                    LXQ: 0.3,
-                    MAC: 0.3,
-                    MON: 0.3,
-                    MTS: 0.3,
-                    MUT;adult: 0.3,
-                    MUT;juvenile: 0.3,
-                    NEP: 0.3,
-                    OCC: 0.3,
-                    OLV: 0.3,
-                    OQT: 0.3,
-                    OUL: 0.3,
-                    OUM: 0.3,
-                    PAC: 0.3,
-                    PIL;adult: 0.3,
-                    PIL;juvenile: 0.3,
-                    PIW: 0.3,
-                    POD: 0.3,
-                    RJC: 0.3,
-                    SAA: 0.3,
-                    SBA: 0.3,
-                    SCK: 0.3,
-                    SFS: 0.3,
-                    SHO: 0.3,
-                    SKM: 0.3,
-                    SOO: 0.3,
-                    SPC: 0.3,
-                    SPW: 0.3,
-                    SQE: 0.3,
-                    SQM: 0.3,
-                    SRG: 0.3,
-                    SRJ: 0.3,
-                    SYC: 0.3,
-                    TSU: 0.3,
-                    TTL: 0.3,
-                    WHB: 0.3
-                  }
+                - !!uk.ac.ox.poseidon.agents.catches.disposition.IndexedDiscardMortalityFactory
+                  rateFunction: !!uk.ac.ox.poseidon.core.functions.ComposedFunctionFactory
+                    function1: *id016
+                    function2: !!uk.ac.ox.poseidon.core.functions.MapValueExtractorFactory
+                      map: !!uk.ac.ox.poseidon.io.tables.MapFromTableFactory
+                        keyBuilder: *id017
+                        table: *id018
+                        valueBuilder: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFromValueFactory {
+                          value: 0.3
+                        }
                   species: *id006
               fisheableSupplier: !!uk.ac.ox.poseidon.agents.fisheables.CurrentCellFisheableFactory
                 fisheableGrid: !!uk.ac.ox.poseidon.biology.biomass.FisheableBiomassGridsFactory
-                  biomassGrids: *id016
+                  biomassGrids: *id019
               guard: null
             - !!uk.ac.ox.poseidon.agents.tasks.travel.SetDestinationToOriginFactory {
               guard: null
@@ -684,7 +454,7 @@ components:
                 }
               guard: null
             - !!uk.ac.ox.poseidon.agents.tasks.travel.RefuelFactory
-              fuelStationGrid: *id021
+              fuelStationGrid: *id024
               guard: null
             - !!uk.ac.ox.poseidon.agents.tasks.travel.EndTripFactory {
               guard: null
@@ -717,11 +487,11 @@ components:
         value: 3.0
       }
       fuelTank: !!uk.ac.ox.poseidon.agents.vessels.engines.SimpleFuelTankFactory
-        capacity: &id022 !!uk.ac.ox.poseidon.core.quantities.VolumeFactory {
+        capacity: &id025 !!uk.ac.ox.poseidon.core.quantities.VolumeFactory {
           unitString: l,
           value: 100000.0
         }
-        currentFuel: *id022
+        currentFuel: *id025
     eventCodeColumn: event
     eventDateColumn: event_start_date
     extraFactories:
@@ -730,16 +500,16 @@ components:
         }
       optionValues: *id014
     fleet: !!uk.ac.ox.poseidon.agents.vessels.FleetFactory
-      marketGrid: *id023
+      marketGrid: *id026
       portGrid: *id007
-      vesselField: *id024
+      vesselField: *id027
     gear: !!uk.ac.ox.poseidon.agents.vessels.VesselScopeFactoriesByCode
       code: null
       defaultFactory: !!uk.ac.ox.poseidon.agents.vessels.gears.InactiveGearFactory {
         code: null
       }
       factories:
-        PS: !!uk.ac.ox.poseidon.agents.vessels.gears.SpeciesSpecificBiomassCatchabilityGearFactory
+        PS: !!uk.ac.ox.poseidon.agents.vessels.gears.IndexedBiomassCatchabilityGearFactory
           code: PS
           durationSupplier: !!uk.ac.ox.poseidon.core.providers.constant.ConstantProviderFactory
             object: !!uk.ac.ox.poseidon.core.time.DurationFactory {
@@ -748,80 +518,17 @@ components:
               minutes: 0,
               seconds: 0
             }
-          proportions: {
-            ALB: 0.1,
-            ANE;adult: 0.1,
-            ANE;juvenile: 0.1,
-            ANK: 0.1,
-            ARA: 0.1,
-            BFT: 0.1,
-            BIB: 0.1,
-            BLL: 0.1,
-            BOG: 0.1,
-            BON: 0.1,
-            BOY: 0.1,
-            BRF: 0.1,
-            BSH: 0.1,
-            CIL: 0.1,
-            COE: 0.1,
-            DBO: 0.1,
-            DRR: 0.1,
-            DST: 0.1,
-            EOI: 0.1,
-            FAM: 0.1,
-            GLI: 0.1,
-            GRQ: 0.1,
-            HKE;adult: 0.1,
-            HKE;juvenile: 0.1,
-            HMM: 0.1,
-            HOM: 0.1,
-            HQB: 0.1,
-            JAA: 0.1,
-            JDP: 0.1,
-            JRS: 0.1,
-            LDB: 0.1,
-            LDV: 0.1,
-            LKO: 0.1,
-            LKT: 0.1,
-            LQZ: 0.1,
-            LXQ: 0.1,
-            MAC: 0.1,
-            MON: 0.1,
-            MTS: 0.1,
-            MUT;adult: 0.1,
-            MUT;juvenile: 0.1,
-            NEP: 0.1,
-            OCC: 0.1,
-            OLV: 0.1,
-            OQT: 0.1,
-            OUL: 0.1,
-            OUM: 0.1,
-            PAC: 0.1,
-            PIL;adult: 0.1,
-            PIL;juvenile: 0.1,
-            PIW: 0.1,
-            POD: 0.1,
-            RJC: 0.1,
-            SAA: 0.1,
-            SBA: 0.1,
-            SCK: 0.1,
-            SFS: 0.1,
-            SHO: 0.1,
-            SKM: 0.1,
-            SOO: 0.1,
-            SPC: 0.1,
-            SPW: 0.1,
-            SQE: 0.1,
-            SQM: 0.1,
-            SRG: 0.1,
-            SRJ: 0.1,
-            SYC: 0.1,
-            TSU: 0.1,
-            TTL: 0.1,
-            WHB: 0.1
-          }
+          proportionFunction: !!uk.ac.ox.poseidon.core.functions.ComposedFunctionFactory
+            function1: *id016
+            function2: !!uk.ac.ox.poseidon.core.functions.MapValueExtractorFactory
+              map: !!uk.ac.ox.poseidon.io.tables.MapFromTableFactory
+                keyBuilder: *id017
+                table: *id018
+                valueBuilder: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFromValueFactory {
+                  value: 0.1
+                }
           species: *id006
-        OTB: !!uk.ac.ox.poseidon.agents.vessels.gears.SpeciesSpecificBiomassCatchabilityGearFactory
+        OTB: !!uk.ac.ox.poseidon.agents.vessels.gears.IndexedBiomassCatchabilityGearFactory
           code: OTB
           durationSupplier: !!uk.ac.ox.poseidon.core.providers.constant.ConstantProviderFactory
             object: !!uk.ac.ox.poseidon.core.time.DurationFactory {
@@ -830,78 +537,15 @@ components:
               minutes: 0,
               seconds: 0
             }
-          proportions: {
-            ALB: 0.1,
-            ANE;adult: 0.1,
-            ANE;juvenile: 0.1,
-            ANK: 0.1,
-            ARA: 0.1,
-            BFT: 0.1,
-            BIB: 0.1,
-            BLL: 0.1,
-            BOG: 0.1,
-            BON: 0.1,
-            BOY: 0.1,
-            BRF: 0.1,
-            BSH: 0.1,
-            CIL: 0.1,
-            COE: 0.1,
-            DBO: 0.1,
-            DRR: 0.1,
-            DST: 0.1,
-            EOI: 0.1,
-            FAM: 0.1,
-            GLI: 0.1,
-            GRQ: 0.1,
-            HKE;adult: 0.1,
-            HKE;juvenile: 0.1,
-            HMM: 0.1,
-            HOM: 0.1,
-            HQB: 0.1,
-            JAA: 0.1,
-            JDP: 0.1,
-            JRS: 0.1,
-            LDB: 0.1,
-            LDV: 0.1,
-            LKO: 0.1,
-            LKT: 0.1,
-            LQZ: 0.1,
-            LXQ: 0.1,
-            MAC: 0.1,
-            MON: 0.1,
-            MTS: 0.1,
-            MUT;adult: 0.1,
-            MUT;juvenile: 0.1,
-            NEP: 0.1,
-            OCC: 0.1,
-            OLV: 0.1,
-            OQT: 0.1,
-            OUL: 0.1,
-            OUM: 0.1,
-            PAC: 0.1,
-            PIL;adult: 0.1,
-            PIL;juvenile: 0.1,
-            PIW: 0.1,
-            POD: 0.1,
-            RJC: 0.1,
-            SAA: 0.1,
-            SBA: 0.1,
-            SCK: 0.1,
-            SFS: 0.1,
-            SHO: 0.1,
-            SKM: 0.1,
-            SOO: 0.1,
-            SPC: 0.1,
-            SPW: 0.1,
-            SQE: 0.1,
-            SQM: 0.1,
-            SRG: 0.1,
-            SRJ: 0.1,
-            SYC: 0.1,
-            TSU: 0.1,
-            TTL: 0.1,
-            WHB: 0.1
-          }
+          proportionFunction: !!uk.ac.ox.poseidon.core.functions.ComposedFunctionFactory
+            function1: *id016
+            function2: !!uk.ac.ox.poseidon.core.functions.MapValueExtractorFactory
+              map: !!uk.ac.ox.poseidon.io.tables.MapFromTableFactory
+                keyBuilder: *id017
+                table: *id018
+                valueBuilder: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFromValueFactory {
+                  value: 0.1
+                }
           species: *id006
     hold: !!uk.ac.ox.poseidon.agents.vessels.holds.InfiniteBiomassHoldFactory
       catchCategoriser: !!uk.ac.ox.poseidon.agents.catches.UniformCatchCategoriserFactory
@@ -917,8 +561,28 @@ components:
     portCodeColumn: place_of_registration
     vesselIdColumn: cfr
     vesselNameColumn: name_of_vessel
-  fishingActionAccumulator: *id025
-  biomassSaleAccumulator: *id026
+  fixedCostCollector: !!uk.ac.ox.poseidon.core.schedule.ScheduledRepeatingFromStartFactory
+    interval: *id028
+    ordering: 0
+    steppable: !!uk.ac.ox.poseidon.agents.vessels.accounts.FixedCostCollectorFactory
+      costExtractor: !!uk.ac.ox.poseidon.core.functions.ComposedFunctionFactory
+        function1: *id029
+        function2: !!uk.ac.ox.poseidon.core.functions.MapValueExtractorFactory
+          map: !!uk.ac.ox.poseidon.io.tables.MapFromTableFactory
+            keyBuilder: *id030
+            table: !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
+              dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
+                encoding: UTF-8
+                path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
+                  parent: *id001
+                  path: operating_costs.csv
+            valueBuilder: !!uk.ac.ox.poseidon.agents.money.MoneyFromRowFactory {
+              amountColumnName: fixed_cost_per_day,
+              currencyColumnName: currency
+            }
+      fleet: *id031
+  fishingActionAccumulator: *id032
+  biomassSaleAccumulator: *id033
   directoryRemover: !!uk.ac.ox.poseidon.core.utils.FinalProcessFactory
     process: !!uk.ac.ox.poseidon.io.DirectoryRemoverFactory
       ignoreIfAbsent: false
