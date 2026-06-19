@@ -381,8 +381,16 @@ components:
                         }
                         componentRegister: &id012 !!uk.ac.ox.poseidon.agents.components.VesselComponentRegisterFactory {
                           }
-                      optionValuesSupplier: !!uk.ac.ox.poseidon.agents.choices.BestOptionsFromFriendsSupplierFactory
-                        maxNumberOfFriends: 5
+                      optionValuesSupplier: !!uk.ac.ox.poseidon.agents.choices.BestOptionsFromFriendsFactory
+                        friendsSupplier: !!uk.ac.ox.poseidon.agents.vessels.friends.DynamicFriendsSupplierFactory
+                          friendshipCondition: !!uk.ac.ox.poseidon.core.predicates.logical.AllOfFactory
+                            predicates:
+                            - !!uk.ac.ox.poseidon.agents.vessels.predicates.VesselIsActiveFactory {
+                              }
+                            - !!uk.ac.ox.poseidon.agents.vessels.predicates.VesselHasSameHomePortFactory {
+                              }
+                          potentialFriends: *id012
+                          targetNumberOfFriends: 5
                         optionValuesRegister: *id012
                     explorer: !!uk.ac.ox.poseidon.agents.choices.NeighbourhoodGridExplorerFactory
                       cellPredicate: *id013
@@ -715,6 +723,8 @@ components:
       fleet: *id032
   fishingActionAccumulator: *id033
   biomassSaleAccumulator: *id034
+  landingsAccumulator: !!eu.project.surimi.poseidon.calibration.LandingsAccumulatorFactory {
+    }
   directoryRemover: !!uk.ac.ox.poseidon.core.utils.FinalProcessFactory
     process: !!uk.ac.ox.poseidon.io.DirectoryRemoverFactory
       ignoreIfAbsent: false
