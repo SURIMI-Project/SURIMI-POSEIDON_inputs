@@ -20,8 +20,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_S3_ENDPOINT: "https://minio.dive.edito.eu"
           AWS_REGION: "waw3-1"
+          AWS_S3_PREFIX: "surimi-poseidon"
         run: |
-          aws s3 sync . "s3://${AWS_S3_BUCKET}/" \
+          aws s3 sync . "s3://${AWS_S3_BUCKET}/${AWS_S3_PREFIX}/" \
             --endpoint-url "${AWS_S3_ENDPOINT}" \
             --region "${AWS_REGION}" \
             --delete \
