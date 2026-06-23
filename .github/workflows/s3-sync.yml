@@ -1,0 +1,29 @@
+name: Sync repo to S3
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Sync to S3
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_S3_ENDPOINT: "https://minio.dive.edito.eu"
+          AWS_REGION: "waw3-1"
+        run: |
+          aws s3 sync . "s3://${AWS_S3_BUCKET}/" \
+            --endpoint-url "${AWS_S3_ENDPOINT}" \
+            --region "${AWS_REGION}" \
+            --delete \
+            --exclude ".git/*" \
+            --exclude ".github/*"
