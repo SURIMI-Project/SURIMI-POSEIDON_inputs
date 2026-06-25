@@ -668,6 +668,10 @@ components:
               minutes: 0,
               seconds: 0
             }
+          minimumCatchThreshold: !!uk.ac.ox.poseidon.core.quantities.MassFactory {
+            unitString: kg,
+            value: 1.0
+          }
           proportionFunction: !!uk.ac.ox.poseidon.core.functions.ComposedFunctionFactory
             function1: !!uk.ac.ox.poseidon.biology.species.extractors.SpeciesKeyExtractorFactory {
               }
@@ -683,6 +687,10 @@ components:
               minutes: 0,
               seconds: 0
             }
+          minimumCatchThreshold: !!uk.ac.ox.poseidon.core.quantities.MassFactory {
+            unitString: kg,
+            value: 1.0
+          }
           proportionFunction: !!uk.ac.ox.poseidon.core.functions.ComposedFunctionFactory
             function1: !!uk.ac.ox.poseidon.biology.species.extractors.SpeciesKeyExtractorFactory {
               }
