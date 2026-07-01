@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Sync to S3
         env:
@@ -22,6 +22,11 @@ jobs:
           AWS_REGION: "waw3-1"
           AWS_S3_PREFIX: "surimi-poseidon"
         run: |
+          # Avoid multipart upload on S3-compatible backends that reject it
+          aws configure set default.s3.multipart_threshold 5GB
+          aws configure set default.s3.multipart_chunksize 5GB
+          aws configure set default.s3.max_concurrent_requests 1
+
           aws s3 sync . "s3://${AWS_S3_BUCKET}/${AWS_S3_PREFIX}/" \
             --endpoint-url "${AWS_S3_ENDPOINT}" \
             --region "${AWS_REGION}" \
