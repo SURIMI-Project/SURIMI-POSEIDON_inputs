@@ -1,4 +1,4 @@
-species_code,life_stage,gear,discard_ratio
+species_code,life_stage,gear_code,discard_ratio
 ALB,NA,OTB,0.2594142259414226
 ALB,NA,PS,0.16959305928527166
 ANE,adult,OTB,0.28608923884514437
