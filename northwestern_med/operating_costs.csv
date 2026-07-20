@@ -1,4 +1,4 @@
-country_code,year,vessel_length,gear,cost_per_hour_at_sea,fixed_cost_per_day,currency
+country_code,year,vessel_length,gear_code,cost_per_hour_at_sea,fixed_cost_per_day,currency
 ESP,2013,VL0612,OTB,16.8,23.4,EUR
 ESP,2013,VL1218,OTB,23.83,57.62,EUR
 ESP,2013,VL1824,OTB,32.13,28.94,EUR
