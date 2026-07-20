@@ -470,7 +470,7 @@ components:
                             keyColumnNames: [
                               species_code,
                               life_stage,
-                              gear
+                              gear_code
                             ]
                             
                           table: &id022 !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
@@ -534,7 +534,7 @@ components:
                         country_code,
                         year,
                         vessel_length,
-                        gear
+                        gear_code
                       ]
                       
                     table: !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
