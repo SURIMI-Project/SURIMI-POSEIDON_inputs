@@ -150,8 +150,8 @@ components:
         VMA;: 0.1,
         WHB;: 0.1
       }
-  species: &id004 !!uk.ac.ox.poseidon.biology.species.SpeciesFromDataFactory
-    data: !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
+  species: &id005 !!uk.ac.ox.poseidon.biology.species.SpeciesFromDataFactory
+    data: !!uk.ac.ox.poseidon.io.tables.TableFromCsvFactory
       dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
         encoding: UTF-8
         path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
@@ -162,11 +162,11 @@ components:
     lifeStageColumn: life_stage
     speciesCodeColumn: species_code
     speciesNameColumn: species_name
-  bathymetricGrid: &id006 !!uk.ac.ox.poseidon.geography.bathymetry.BathymetricGridFromGridFileFactory
+  bathymetricGrid: &id003 !!uk.ac.ox.poseidon.geography.bathymetry.BathymetricGridFromGridFileFactory
     aggregator: !!uk.ac.ox.poseidon.core.aggregators.MaxAggregatorFactory {
       }
     inverted: false
-    modelGrid: &id003 !!uk.ac.ox.poseidon.geography.grids.ModelGridWithActiveCellsFactory
+    modelGrid: &id004 !!uk.ac.ox.poseidon.geography.grids.ModelGridWithActiveCellsFactory
       activeCells: !!uk.ac.ox.poseidon.geography.grids.CellSetFromGridFileFactory
         includedValue: 0.0
         path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
@@ -177,29 +177,32 @@ components:
           parent: *id001
           path: bathymetry_grid.asc
     path: *id002
-  biomassGrids: &id005 !!uk.ac.ox.poseidon.biology.biomass.BiomassGridsFactory
+  biomassGrids: &id006 !!uk.ac.ox.poseidon.biology.biomass.BiomassGridsFactory
     biomassAllocators: !!uk.ac.ox.poseidon.core.utils.ListFactory
       factories:
-      - !!uk.ac.ox.poseidon.geography.allocators.SupplierAllocatorFactory
-        doubleSupplier: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFromValueFactory {
-          value: 0.0
-        }
-    modelGrid: *id003
-    species: *id004
+      - !!uk.ac.ox.poseidon.geography.allocators.FilteredAllocatorFactory
+        cellPredicate: !!uk.ac.ox.poseidon.geography.predicates.IsActiveWaterCellFactory
+          bathymetricGrid: *id003
+        delegateAllocator: !!uk.ac.ox.poseidon.geography.allocators.SupplierAllocatorFactory
+          doubleSupplier: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFromValueFactory {
+            value: 0.0
+          }
+    modelGrid: *id004
+    species: *id005
   dateIndexedBiomassGridUpdates: !!uk.ac.ox.poseidon.biology.biomass.DateIndexedBiomassGridUpdatesFactory
     biomassGrids: &id016 !!uk.ac.ox.poseidon.biology.biomass.FisheableBiomassGridsFactory
-      biomassGrids: *id005
+      biomassGrids: *id006
     dateIndexedBiomassGrids: !!uk.ac.ox.poseidon.biology.biomass.DateIndexedBiomassGridsFromNetCdfFactory
-      modelGrid: *id003
+      modelGrid: *id004
       ncFilePath: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
         parent: *id001
         path: biomass_grids.nc
       separator: _
-      species: *id004
+      species: *id005
   marketGrid: &id024 !!uk.ac.ox.poseidon.agents.market.BiomassMarketGridFromPriceTableFactory
     categoryCodeColumn: category_code
     currencyColumn: currency
-    data: !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
+    data: !!uk.ac.ox.poseidon.io.tables.TableFromCsvFactory
       dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
         encoding: UTF-8
         path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
@@ -209,22 +212,22 @@ components:
     measurementUnitColumn: measurement_unit
     portCodeColumn: market_code
     portGrid: &id007 !!uk.ac.ox.poseidon.geography.ports.PortGridFactory
-      bathymetricGrid: *id006
+      bathymetricGrid: *id003
       distanceCalculator: &id009 !!uk.ac.ox.poseidon.geography.distance.HaversineDistanceCalculatorFactory
-        modelGrid: *id003
+        modelGrid: *id004
       ports: !!uk.ac.ox.poseidon.geography.ports.PortsFromTableFactory
         latitudeColumnName: lat
         longitudeColumnName: lon
         portCodeColumnName: port_code
         portNameColumnName: port_name
-        table: !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
+        table: !!uk.ac.ox.poseidon.io.tables.TableFromCsvFactory
           dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
             encoding: UTF-8
             path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
               parent: *id001
               path: ports.csv
     priceColumn: price
-    species: *id004
+    species: *id005
     speciesCodeColumn: species_code
   portGrid: *id007
   regulations: &id012 !!uk.ac.ox.poseidon.regulations.ForbiddenIfFactory
@@ -233,11 +236,11 @@ components:
       - !!uk.ac.ox.poseidon.regulations.predicates.spatial.ActionCellPredicateFactory
         cellPredicate: !!uk.ac.ox.poseidon.core.predicates.ConditionFactory
           extractor: !!uk.ac.ox.poseidon.geography.grids.extractors.CellValueFactory
-            grid: *id006
+            grid: *id003
           predicate: !!uk.ac.ox.poseidon.core.predicates.numeric.GreaterThanFactory {
             threshold: -35.0
           }
-        modelGrid: *id003
+        modelGrid: *id004
       - !!uk.ac.ox.poseidon.regulations.predicates.spatial.ActionCellPredicateFactory
         cellPredicate: !!uk.ac.ox.poseidon.core.predicates.InSetFactory
           values: !!uk.ac.ox.poseidon.geography.grids.CellSetFromGridFileFactory
@@ -245,7 +248,7 @@ components:
             path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
               parent: *id001
               path: french_eez.asc
-        modelGrid: *id003
+        modelGrid: *id004
   totalAllowableCatchQuotas: &id010 !!uk.ac.ox.poseidon.core.schedule.ScheduledRepeatingFromStartFactory
     interval: &id028 !!uk.ac.ox.poseidon.core.time.PeriodFactory {
       days: 1,
@@ -292,8 +295,8 @@ components:
           }
         vesselLengthTag: loa
   vesselField: &id025 !!uk.ac.ox.poseidon.agents.fields.VesselFieldFactory
-    modelGrid: *id003
-  modelGrid: *id003
+    modelGrid: *id004
+  modelGrid: *id004
   monthlyProcesses: !!uk.ac.ox.poseidon.core.schedule.ScheduledRepeatingFactory
     interval: &id008 !!uk.ac.ox.poseidon.core.time.PeriodFactory {
       days: 0,
@@ -342,10 +345,10 @@ components:
                   }
                 guard: null
                 pathFinder: &id011 !!uk.ac.ox.poseidon.geography.paths.DefaultPathFinderFactory
-                  bathymetricGrid: *id006
+                  bathymetricGrid: *id003
                   distance: *id009
                   pathCache: !!uk.ac.ox.poseidon.geography.paths.DefaultPathCacheFactory
-                    bathymetricGrid: *id006
+                    bathymetricGrid: *id003
                     distance: *id009
                     portGrid: *id007
                   portGrid: *id007
@@ -472,7 +475,7 @@ components:
                               gear_code
                             ]
                             
-                          table: &id022 !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
+                          table: &id022 !!uk.ac.ox.poseidon.io.tables.TableFromCsvFactory
                             dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
                               encoding: UTF-8
                               path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
@@ -481,7 +484,7 @@ components:
                           valueBuilder: !!uk.ac.ox.poseidon.io.tables.DoubleFromRowFactory {
                             columnName: discard_ratio
                           }
-                  species: *id004
+                  species: *id005
                 - !!uk.ac.ox.poseidon.agents.catches.disposition.ProportionallyLimitingBiomassToHoldFactory {
                   }
                 - &id023 !!uk.ac.ox.poseidon.agents.catches.disposition.FullDiscardMortalityFactory {
@@ -535,7 +538,7 @@ components:
                         gear_code
                       ]
                       
-                    table: !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
+                    table: !!uk.ac.ox.poseidon.io.tables.TableFromCsvFactory
                       dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
                         encoding: UTF-8
                         path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
@@ -619,7 +622,7 @@ components:
                           valueBuilder: !!uk.ac.ox.poseidon.io.tables.DoubleFromRowFactory {
                             columnName: discard_ratio
                           }
-                  species: *id004
+                  species: *id005
                 - !!uk.ac.ox.poseidon.agents.catches.disposition.ProportionallyLimitingBiomassToHoldFactory {
                   }
                 - *id023
@@ -650,7 +653,7 @@ components:
               guard: null
             }
             guard: null
-    data: !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
+    data: !!uk.ac.ox.poseidon.io.tables.TableFromCsvFactory
       dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
         encoding: UTF-8
         path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
@@ -716,7 +719,7 @@ components:
                 }
               function2: !!uk.ac.ox.poseidon.core.functions.MapValueExtractorFactory
                 map: *id026
-          species: *id004
+          species: *id005
         OTB: !!uk.ac.ox.poseidon.agents.vessels.gears.IndexedBiomassCatchabilityGearFactory
           code: OTB
           durationSupplier: !!uk.ac.ox.poseidon.core.providers.constant.ConstantProviderFactory
@@ -739,7 +742,7 @@ components:
                 }
               function2: !!uk.ac.ox.poseidon.core.functions.MapValueExtractorFactory
                 map: *id027
-          species: *id004
+          species: *id005
     hold: !!uk.ac.ox.poseidon.agents.vessels.holds.InfiniteBiomassHoldFactory
       catchCategoriser: !!uk.ac.ox.poseidon.agents.catches.UniformCatchCategoriserFactory
         catchCategory: !!uk.ac.ox.poseidon.agents.catches.CatchCategoryFactory {
@@ -763,7 +766,7 @@ components:
         function2: !!uk.ac.ox.poseidon.core.functions.MapValueExtractorFactory
           map: !!uk.ac.ox.poseidon.io.tables.MapFromTableFactory
             keyBuilder: *id030
-            table: !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
+            table: !!uk.ac.ox.poseidon.io.tables.TableFromCsvFactory
               dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
                 encoding: UTF-8
                 path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
