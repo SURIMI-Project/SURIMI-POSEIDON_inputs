@@ -15,6 +15,7 @@ components:
         BON;: 0.1,
         BOY;: 0.1,
         BRF;: 0.1,
+        BSH;: 0.1,
         CIL;: 0.1,
         COE;: 0.1,
         DBO;: 0.1,
@@ -39,11 +40,13 @@ components:
         LXQ;: 0.1,
         MAC;: 0.1,
         MON;: 0.1,
+        MTS;: 0.1,
         MUT;adult: 0.1,
         MUT;juvenile: 0.1,
         NEP;: 0.1,
         OCC;: 0.1,
         OLV;: 0.1,
+        OQT;: 0.1,
         OUL;: 0.1,
         OUM;: 0.1,
         PAC;: 0.1,
@@ -147,7 +150,7 @@ components:
         VMA;: 0.1,
         WHB;: 0.1
       }
-  species: &id006 !!uk.ac.ox.poseidon.biology.species.SpeciesFromDataFactory
+  species: &id004 !!uk.ac.ox.poseidon.biology.species.SpeciesFromDataFactory
     data: !!uk.ac.ox.poseidon.io.tables.CsvTableFactory
       dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
         encoding: UTF-8
@@ -159,11 +162,11 @@ components:
     lifeStageColumn: life_stage
     speciesCodeColumn: species_code
     speciesNameColumn: species_name
-  bathymetricGrid: &id003 !!uk.ac.ox.poseidon.geography.bathymetry.BathymetricGridFromGridFileFactory
+  bathymetricGrid: &id006 !!uk.ac.ox.poseidon.geography.bathymetry.BathymetricGridFromGridFileFactory
     aggregator: !!uk.ac.ox.poseidon.core.aggregators.MaxAggregatorFactory {
       }
     inverted: false
-    modelGrid: &id004 !!uk.ac.ox.poseidon.geography.grids.ModelGridWithActiveCellsFactory
+    modelGrid: &id003 !!uk.ac.ox.poseidon.geography.grids.ModelGridWithActiveCellsFactory
       activeCells: !!uk.ac.ox.poseidon.geography.grids.CellSetFromGridFileFactory
         includedValue: 0.0
         path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
@@ -174,29 +177,25 @@ components:
           parent: *id001
           path: bathymetry_grid.asc
     path: *id002
-  carryingCapacityGrid: &id005 !!uk.ac.ox.poseidon.biology.biomass.CarryingCapacityGridFactory
-    grid: !!uk.ac.ox.poseidon.geography.grids.DoubleGridFromAllocatorFactory
-      allocator: !!uk.ac.ox.poseidon.geography.allocators.FilteredAllocatorFactory
-        cellPredicate: !!uk.ac.ox.poseidon.geography.predicates.IsActiveWaterCellFactory
-          bathymetricGrid: *id003
-        delegateAllocator: !!uk.ac.ox.poseidon.geography.allocators.SupplierAllocatorFactory
-          doubleSupplier: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFactory
-            doubleFactory: !!uk.ac.ox.poseidon.core.quantities.KilogramsFactory
-              mass: !!uk.ac.ox.poseidon.core.quantities.MassFactory {
-                unitString: kg,
-                value: 10.0
-              }
-      modelGrid: *id004
-  biomassGrids: &id016 !!uk.ac.ox.poseidon.biology.biomass.BiomassGridsFactory
+  biomassGrids: &id005 !!uk.ac.ox.poseidon.biology.biomass.BiomassGridsFactory
     biomassAllocators: !!uk.ac.ox.poseidon.core.utils.ListFactory
       factories:
-      - !!uk.ac.ox.poseidon.biology.allocators.ProportionOfCarryingCapacityAllocatorFactory
-        carryingCapacityGrid: *id005
-        proportionSupplier: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFromValueFactory {
-          value: 1.0
+      - !!uk.ac.ox.poseidon.geography.allocators.SupplierAllocatorFactory
+        doubleSupplier: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFromValueFactory {
+          value: 0.0
         }
-    modelGrid: *id004
-    species: *id006
+    modelGrid: *id003
+    species: *id004
+  dateIndexedBiomassGridUpdates: !!uk.ac.ox.poseidon.biology.biomass.DateIndexedBiomassGridUpdatesFactory
+    biomassGrids: &id016 !!uk.ac.ox.poseidon.biology.biomass.FisheableBiomassGridsFactory
+      biomassGrids: *id005
+    dateIndexedBiomassGrids: !!uk.ac.ox.poseidon.biology.biomass.DateIndexedBiomassGridsFromNetCdfFactory
+      modelGrid: *id003
+      ncFilePath: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
+        parent: *id001
+        path: biomass_grids.nc
+      separator: _
+      species: *id004
   marketGrid: &id024 !!uk.ac.ox.poseidon.agents.market.BiomassMarketGridFromPriceTableFactory
     categoryCodeColumn: category_code
     currencyColumn: currency
@@ -210,9 +209,9 @@ components:
     measurementUnitColumn: measurement_unit
     portCodeColumn: market_code
     portGrid: &id007 !!uk.ac.ox.poseidon.geography.ports.PortGridFactory
-      bathymetricGrid: *id003
+      bathymetricGrid: *id006
       distanceCalculator: &id009 !!uk.ac.ox.poseidon.geography.distance.HaversineDistanceCalculatorFactory
-        modelGrid: *id004
+        modelGrid: *id003
       ports: !!uk.ac.ox.poseidon.geography.ports.PortsFromTableFactory
         latitudeColumnName: lat
         longitudeColumnName: lon
@@ -225,7 +224,7 @@ components:
               parent: *id001
               path: ports.csv
     priceColumn: price
-    species: *id006
+    species: *id004
     speciesCodeColumn: species_code
   portGrid: *id007
   regulations: &id012 !!uk.ac.ox.poseidon.regulations.ForbiddenIfFactory
@@ -234,11 +233,11 @@ components:
       - !!uk.ac.ox.poseidon.regulations.predicates.spatial.ActionCellPredicateFactory
         cellPredicate: !!uk.ac.ox.poseidon.core.predicates.ConditionFactory
           extractor: !!uk.ac.ox.poseidon.geography.grids.extractors.CellValueFactory
-            grid: *id003
+            grid: *id006
           predicate: !!uk.ac.ox.poseidon.core.predicates.numeric.GreaterThanFactory {
             threshold: -35.0
           }
-        modelGrid: *id004
+        modelGrid: *id003
       - !!uk.ac.ox.poseidon.regulations.predicates.spatial.ActionCellPredicateFactory
         cellPredicate: !!uk.ac.ox.poseidon.core.predicates.InSetFactory
           values: !!uk.ac.ox.poseidon.geography.grids.CellSetFromGridFileFactory
@@ -246,7 +245,7 @@ components:
             path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
               parent: *id001
               path: french_eez.asc
-        modelGrid: *id004
+        modelGrid: *id003
   totalAllowableCatchQuotas: &id010 !!uk.ac.ox.poseidon.core.schedule.ScheduledRepeatingFromStartFactory
     interval: &id028 !!uk.ac.ox.poseidon.core.time.PeriodFactory {
       days: 1,
@@ -293,8 +292,8 @@ components:
           }
         vesselLengthTag: loa
   vesselField: &id025 !!uk.ac.ox.poseidon.agents.fields.VesselFieldFactory
-    modelGrid: *id004
-  modelGrid: *id004
+    modelGrid: *id003
+  modelGrid: *id003
   monthlyProcesses: !!uk.ac.ox.poseidon.core.schedule.ScheduledRepeatingFactory
     interval: &id008 !!uk.ac.ox.poseidon.core.time.PeriodFactory {
       days: 0,
@@ -343,10 +342,10 @@ components:
                   }
                 guard: null
                 pathFinder: &id011 !!uk.ac.ox.poseidon.geography.paths.DefaultPathFinderFactory
-                  bathymetricGrid: *id003
+                  bathymetricGrid: *id006
                   distance: *id009
                   pathCache: !!uk.ac.ox.poseidon.geography.paths.DefaultPathCacheFactory
-                    bathymetricGrid: *id003
+                    bathymetricGrid: *id006
                     distance: *id009
                     portGrid: *id007
                   portGrid: *id007
@@ -482,14 +481,13 @@ components:
                           valueBuilder: !!uk.ac.ox.poseidon.io.tables.DoubleFromRowFactory {
                             columnName: discard_ratio
                           }
-                  species: *id006
+                  species: *id004
                 - !!uk.ac.ox.poseidon.agents.catches.disposition.ProportionallyLimitingBiomassToHoldFactory {
                   }
                 - &id023 !!uk.ac.ox.poseidon.agents.catches.disposition.FullDiscardMortalityFactory {
                   }
               fisheableSupplier: !!uk.ac.ox.poseidon.agents.fisheables.CurrentCellFisheableFactory
-                fisheableGrid: !!uk.ac.ox.poseidon.biology.biomass.FisheableBiomassGridsFactory
-                  biomassGrids: *id016
+                fisheableGrid: *id016
               guard: null
             - !!uk.ac.ox.poseidon.agents.tasks.travel.SetDestinationToOriginFactory {
               guard: null
@@ -621,13 +619,12 @@ components:
                           valueBuilder: !!uk.ac.ox.poseidon.io.tables.DoubleFromRowFactory {
                             columnName: discard_ratio
                           }
-                  species: *id006
+                  species: *id004
                 - !!uk.ac.ox.poseidon.agents.catches.disposition.ProportionallyLimitingBiomassToHoldFactory {
                   }
                 - *id023
               fisheableSupplier: !!uk.ac.ox.poseidon.agents.fisheables.CurrentCellFisheableFactory
-                fisheableGrid: !!uk.ac.ox.poseidon.biology.biomass.FisheableBiomassGridsFactory
-                  biomassGrids: *id016
+                fisheableGrid: *id016
               guard: null
             - !!uk.ac.ox.poseidon.agents.tasks.travel.SetDestinationToOriginFactory {
               guard: null
@@ -719,7 +716,7 @@ components:
                 }
               function2: !!uk.ac.ox.poseidon.core.functions.MapValueExtractorFactory
                 map: *id026
-          species: *id006
+          species: *id004
         OTB: !!uk.ac.ox.poseidon.agents.vessels.gears.IndexedBiomassCatchabilityGearFactory
           code: OTB
           durationSupplier: !!uk.ac.ox.poseidon.core.providers.constant.ConstantProviderFactory
@@ -742,7 +739,7 @@ components:
                 }
               function2: !!uk.ac.ox.poseidon.core.functions.MapValueExtractorFactory
                 map: *id027
-          species: *id006
+          species: *id004
     hold: !!uk.ac.ox.poseidon.agents.vessels.holds.InfiniteBiomassHoldFactory
       catchCategoriser: !!uk.ac.ox.poseidon.agents.catches.UniformCatchCategoriserFactory
         catchCategory: !!uk.ac.ox.poseidon.agents.catches.CatchCategoryFactory {
