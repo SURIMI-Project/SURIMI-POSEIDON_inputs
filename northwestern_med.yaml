@@ -196,6 +196,16 @@ components:
     ncFilePath: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
       parent: *id001
       path: mpa_grids.nc
+  mpaClosedMonths: !!eu.project.surimi.poseidon.regulations.MpaClosedMonthsFromTableFactory
+    closedColumnName: closed
+    monthColumnName: month
+    mpaIdColumnName: mpa_id
+    table: !!uk.ac.ox.poseidon.io.tables.TableFromCsvFactory
+      dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
+        encoding: UTF-8
+        path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
+          parent: *id001
+          path: mpa_months.csv
   timeIndexedBiomassGridUpdates: !!uk.ac.ox.poseidon.biology.biomass.TimeIndexedBiomassGridUpdatesFactory
     biomassGrids: &id016 !!uk.ac.ox.poseidon.biology.biomass.FisheableBiomassGridsFactory
       biomassGrids: *id006
