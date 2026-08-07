@@ -1,9 +1,9 @@
 mpa_id,gear_code,country_code
-4,OTB,ESP
-4,PS,ESP
-5,OTB,ESP
-6,OTB,ESP
-13,OTB,ESP
-14,OTB,ESP
-15,PS,ESP
-16,OTB,ESP
+mpa_4,OTB,ESP
+mpa_4,PS,ESP
+mpa_5,OTB,ESP
+mpa_6,OTB,ESP
+mpa_13,OTB,ESP
+mpa_14,OTB,ESP
+mpa_15,PS,ESP
+mpa_16,OTB,ESP
