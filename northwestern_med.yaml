@@ -297,6 +297,14 @@ components:
             threshold: -50.0
           }
         modelGrid: *id004
+      - !!uk.ac.ox.poseidon.regulations.predicates.spatial.ActionCellPredicateFactory
+        cellPredicate: !!uk.ac.ox.poseidon.core.predicates.ConditionFactory
+          extractor: !!uk.ac.ox.poseidon.geography.grids.extractors.CellValueFactory
+            grid: *id003
+          predicate: !!uk.ac.ox.poseidon.core.predicates.numeric.BelowFactory {
+            threshold: -1000.0
+          }
+        modelGrid: *id004
       - *id008
   totalAllowableCatchQuotas: &id011 !!uk.ac.ox.poseidon.core.schedule.ScheduledRepeatingFromStartFactory
     interval: &id031 !!uk.ac.ox.poseidon.core.time.PeriodFactory {
