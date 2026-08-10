@@ -190,12 +190,13 @@ components:
     modelGrid: *id004
     species: *id005
   mpaGrids: !!uk.ac.ox.poseidon.geography.grids.StaticGridsFromNetCdfFactory
-    latitudeDimensionName: latitude
-    longitudeDimensionName: longitude
     modelGrid: *id004
-    ncFilePath: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
-      parent: *id001
-      path: mpa_grids.nc
+    staticNetCdfGridReader: !!uk.ac.ox.poseidon.geography.grids.StaticNetCdfGridReaderFactory
+      latitudeDimensionName: latitude
+      longitudeDimensionName: longitude
+      ncFilePath: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
+        parent: *id001
+        path: mpa_grids.nc
   mpaClosedMonths: !!eu.project.surimi.poseidon.regulations.MpaClosedMonthsFromTableFactory
     closedColumnName: closed
     monthColumnName: month
@@ -220,15 +221,16 @@ components:
     biomassGrids: &id016 !!uk.ac.ox.poseidon.biology.biomass.FisheableBiomassGridsFactory
       biomassGrids: *id006
     timeIndexedBiomassGrids: !!uk.ac.ox.poseidon.biology.biomass.TimeIndexedBiomassGridsFromNetCdfFactory
-      latitudeDimensionName: latitude
-      longitudeDimensionName: longitude
       modelGrid: *id004
-      ncFilePath: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
-        parent: *id001
-        path: biomass_grids.nc
       separator: _
       species: *id005
-      timeDimensionName: time
+      timeIndexedNetCdfGridReader: !!uk.ac.ox.poseidon.geography.grids.TimeIndexedNetCdfGridReaderFactory
+        latitudeDimensionName: latitude
+        longitudeDimensionName: longitude
+        ncFilePath: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
+          parent: *id001
+          path: biomass_grids.nc
+        timeDimensionName: time
   marketGrid: &id024 !!uk.ac.ox.poseidon.agents.market.BiomassMarketGridFromPriceTableFactory
     categoryCodeColumn: category_code
     currencyColumn: currency
