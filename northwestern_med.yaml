@@ -189,34 +189,6 @@ components:
           }
     modelGrid: *id004
     species: *id005
-  mpaGrids: !!uk.ac.ox.poseidon.geography.grids.StaticGridsFromNetCdfFactory
-    modelGrid: *id004
-    staticNetCdfGridReader: !!uk.ac.ox.poseidon.geography.grids.StaticNetCdfGridReaderFactory
-      latitudeDimensionName: latitude
-      longitudeDimensionName: longitude
-      ncFilePath: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
-        parent: *id001
-        path: mpa_grids.nc
-  mpaClosedMonths: !!eu.project.surimi.poseidon.regulations.MpaClosedMonthsFromTableFactory
-    closedColumnName: closed
-    monthColumnName: month
-    mpaIdColumnName: mpa_id
-    table: !!uk.ac.ox.poseidon.io.tables.TableFromCsvFactory
-      dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
-        encoding: UTF-8
-        path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
-          parent: *id001
-          path: mpa_months.csv
-  mpaFleetRestrictions: !!eu.project.surimi.poseidon.regulations.MpaFleetRestrictionsFromTableFactory
-    countryCodeColumnName: country_code
-    gearCodeColumnName: gear_code
-    mpaIdColumnName: mpa_id
-    table: !!uk.ac.ox.poseidon.io.tables.TableFromCsvFactory
-      dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
-        encoding: UTF-8
-        path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
-          parent: *id001
-          path: mpa_fleet_restrictions.csv
   timeIndexedBiomassGridUpdates: !!uk.ac.ox.poseidon.biology.biomass.TimeIndexedBiomassGridUpdatesFactory
     biomassGrids: &id016 !!uk.ac.ox.poseidon.biology.biomass.FisheableBiomassGridsFactory
       biomassGrids: *id006
@@ -281,6 +253,37 @@ components:
               parent: *id001
               path: french_eez.asc
         modelGrid: *id004
+      - !!eu.project.surimi.poseidon.regulations.MpaClosurePredicateFactory
+        countryTag: country_of_registration
+        modelGrid: *id004
+        mpaClosedMonths: !!eu.project.surimi.poseidon.regulations.MpaClosedMonthsFromTableFactory
+          closedColumnName: closed
+          monthColumnName: month
+          mpaIdColumnName: mpa_id
+          table: !!uk.ac.ox.poseidon.io.tables.TableFromCsvFactory
+            dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
+              encoding: UTF-8
+              path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
+                parent: *id001
+                path: mpa_months.csv
+        mpaFleetRestrictions: !!eu.project.surimi.poseidon.regulations.MpaFleetRestrictionsFromTableFactory
+          countryCodeColumnName: country_code
+          gearCodeColumnName: gear_code
+          mpaIdColumnName: mpa_id
+          table: !!uk.ac.ox.poseidon.io.tables.TableFromCsvFactory
+            dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
+              encoding: UTF-8
+              path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
+                parent: *id001
+                path: mpa_fleet_restrictions.csv
+        mpaGrids: !!uk.ac.ox.poseidon.geography.grids.StaticGridsFromNetCdfFactory
+          modelGrid: *id004
+          staticNetCdfGridReader: !!uk.ac.ox.poseidon.geography.grids.StaticNetCdfGridReaderFactory
+            latitudeDimensionName: latitude
+            longitudeDimensionName: longitude
+            ncFilePath: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
+              parent: *id001
+              path: mpa_grids.nc
   totalAllowableCatchQuotas: &id010 !!uk.ac.ox.poseidon.core.schedule.ScheduledRepeatingFromStartFactory
     interval: &id028 !!uk.ac.ox.poseidon.core.time.PeriodFactory {
       days: 1,
