@@ -286,6 +286,18 @@ components:
               ncFilePath: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
                 parent: *id001
                 path: mpa_grids.nc
+        - !!eu.project.surimi.poseidon.regulations.PortClosurePredicateFactory
+          portClosures: !!eu.project.surimi.poseidon.regulations.PortClosuresFromTableFactory
+            endDateColumnName: end_date
+            gearCodeColumnName: gear_code
+            portCodeColumnName: port_code
+            startDateColumnName: start_date
+            table: !!uk.ac.ox.poseidon.io.tables.TableFromCsvFactory
+              dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
+                encoding: UTF-8
+                path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
+                  parent: *id001
+                  path: port_closures.csv
   bottomTrawlerRegulations: &id021 !!uk.ac.ox.poseidon.regulations.ForbiddenIfFactory
     actionPredicate: !!uk.ac.ox.poseidon.core.predicates.logical.AnyOfFactory
       predicates:
