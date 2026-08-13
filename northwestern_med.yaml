@@ -241,19 +241,21 @@ components:
         cellPredicate: !!uk.ac.ox.poseidon.core.predicates.ConditionFactory
           extractor: !!uk.ac.ox.poseidon.geography.grids.extractors.CellValueFactory
             grid: *id003
-          predicate: !!uk.ac.ox.poseidon.core.predicates.numeric.GreaterThanFactory {
-            threshold: -35.0
-          }
+          predicate: !!uk.ac.ox.poseidon.core.predicates.numeric.GreaterThanFactory
+            threshold: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFromValueFactory {
+              value: -35.0
+            }
         modelGrid: *id004
       - &id009 !!uk.ac.ox.poseidon.core.predicates.logical.AnyOfFactory
         predicates:
         - !!uk.ac.ox.poseidon.regulations.predicates.spatial.ActionCellPredicateFactory
           cellPredicate: !!uk.ac.ox.poseidon.core.predicates.InSetFactory
-            values: !!uk.ac.ox.poseidon.geography.grids.CellSetFromGridFileFactory
-              includedValue: 1.0
-              path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
-                parent: *id001
-                path: french_eez.asc
+            values: !!uk.ac.ox.poseidon.core.providers.constant.ConstantProviderFactory
+              object: !!uk.ac.ox.poseidon.geography.grids.CellSetFromGridFileFactory
+                includedValue: 1.0
+                path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
+                  parent: *id001
+                  path: french_eez.asc
           modelGrid: *id004
         - !!eu.project.surimi.poseidon.regulations.MpaClosurePredicateFactory
           countryTag: country_of_registration
@@ -311,9 +313,10 @@ components:
                     ncFilePath: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
                       parent: *id001
                       path: habitat_grids.nc
-            predicate: !!uk.ac.ox.poseidon.core.predicates.numeric.GreaterThanFactory {
-              threshold: 0.0
-            }
+            predicate: !!uk.ac.ox.poseidon.core.predicates.numeric.GreaterThanFactory
+              threshold: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFromValueFactory {
+                value: 0.0
+              }
           modelGrid: *id004
         - !!uk.ac.ox.poseidon.regulations.predicates.spatial.ActionCellPredicateFactory
           cellPredicate: !!uk.ac.ox.poseidon.core.predicates.ConditionFactory
@@ -321,9 +324,10 @@ components:
               grid: !!uk.ac.ox.poseidon.core.functions.MapEntryFactory
                 key: posidonia
                 map: *id008
-            predicate: !!uk.ac.ox.poseidon.core.predicates.numeric.GreaterThanFactory {
-              threshold: 0.0
-            }
+            predicate: !!uk.ac.ox.poseidon.core.predicates.numeric.GreaterThanFactory
+              threshold: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFromValueFactory {
+                value: 0.0
+              }
           modelGrid: *id004
         - !!uk.ac.ox.poseidon.regulations.predicates.spatial.ActionCellPredicateFactory
           cellPredicate: !!uk.ac.ox.poseidon.core.predicates.ConditionFactory
@@ -331,9 +335,10 @@ components:
               grid: !!uk.ac.ox.poseidon.core.functions.MapEntryFactory
                 key: cymodocea
                 map: *id008
-            predicate: !!uk.ac.ox.poseidon.core.predicates.numeric.GreaterThanFactory {
-              threshold: 0.0
-            }
+            predicate: !!uk.ac.ox.poseidon.core.predicates.numeric.GreaterThanFactory
+              threshold: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFromValueFactory {
+                value: 0.0
+              }
           modelGrid: *id004
   bottomTrawlerRegulations: &id020 !!uk.ac.ox.poseidon.regulations.ForbiddenIfFactory
     actionPredicate: !!uk.ac.ox.poseidon.core.predicates.logical.AnyOfFactory
@@ -342,17 +347,19 @@ components:
         cellPredicate: !!uk.ac.ox.poseidon.core.predicates.ConditionFactory
           extractor: !!uk.ac.ox.poseidon.geography.grids.extractors.CellValueFactory
             grid: *id003
-          predicate: !!uk.ac.ox.poseidon.core.predicates.numeric.GreaterThanFactory {
-            threshold: -50.0
-          }
+          predicate: !!uk.ac.ox.poseidon.core.predicates.numeric.GreaterThanFactory
+            threshold: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFromValueFactory {
+              value: -50.0
+            }
         modelGrid: *id004
       - !!uk.ac.ox.poseidon.regulations.predicates.spatial.ActionCellPredicateFactory
         cellPredicate: !!uk.ac.ox.poseidon.core.predicates.ConditionFactory
           extractor: !!uk.ac.ox.poseidon.geography.grids.extractors.CellValueFactory
             grid: *id003
-          predicate: !!uk.ac.ox.poseidon.core.predicates.numeric.LessThanFactory {
-            threshold: -1000.0
-          }
+          predicate: !!uk.ac.ox.poseidon.core.predicates.numeric.LessThanFactory
+            threshold: !!uk.ac.ox.poseidon.core.providers.constant.ConstantDoubleProviderFromValueFactory {
+              value: -1000.0
+            }
         modelGrid: *id004
       - *id009
   totalAllowableCatchQuotas: &id012 !!uk.ac.ox.poseidon.core.schedule.ScheduledRepeatingFromStartFactory
@@ -475,23 +482,25 @@ components:
                       extractor: !!uk.ac.ox.poseidon.core.providers.temporal.CurrentTimeProviderFactory {
                         }
                       predicate: !!uk.ac.ox.poseidon.core.predicates.temporal.AfterTimeFactory
-                        referenceTime: !!uk.ac.ox.poseidon.core.time.TimeFactory {
-                          hour: 21,
-                          minute: 59,
-                          second: 59
-                        }
+                        referenceTime: !!uk.ac.ox.poseidon.core.providers.constant.ConstantProviderFactory
+                          object: !!uk.ac.ox.poseidon.core.time.TimeFactory {
+                            hour: 21,
+                            minute: 59,
+                            second: 59
+                          }
                     - !!uk.ac.ox.poseidon.core.predicates.ConditionFactory
                       extractor: !!uk.ac.ox.poseidon.core.providers.temporal.CurrentDayOfWeekProviderFactory {
                         }
                       predicate: !!uk.ac.ox.poseidon.core.predicates.InSetFactory
-                        values: !!uk.ac.ox.poseidon.core.utils.ObjectFactory
-                          value: !!set {
-                            !!java.time.DayOfWeek 'SUNDAY': null,
-                            !!java.time.DayOfWeek 'MONDAY': null,
-                            !!java.time.DayOfWeek 'TUESDAY': null,
-                            !!java.time.DayOfWeek 'WEDNESDAY': null,
-                            !!java.time.DayOfWeek 'THURSDAY': null
-                          }
+                        values: !!uk.ac.ox.poseidon.core.providers.constant.ConstantProviderFactory
+                          object: !!uk.ac.ox.poseidon.core.utils.ObjectFactory
+                            value: !!set {
+                              !!java.time.DayOfWeek 'SUNDAY': null,
+                              !!java.time.DayOfWeek 'MONDAY': null,
+                              !!java.time.DayOfWeek 'TUESDAY': null,
+                              !!java.time.DayOfWeek 'WEDNESDAY': null,
+                              !!java.time.DayOfWeek 'THURSDAY': null
+                            }
                 - !!uk.ac.ox.poseidon.agents.tasks.destinations.StartTripFactory
                   destinationSupplier: !!uk.ac.ox.poseidon.agents.choices.EpsilonGreedyDestinationSupplierFactory
                     epsilon: 0.2
@@ -702,23 +711,25 @@ components:
                       extractor: !!uk.ac.ox.poseidon.core.providers.temporal.CurrentTimeProviderFactory {
                         }
                       predicate: !!uk.ac.ox.poseidon.core.predicates.temporal.AfterTimeFactory
-                        referenceTime: !!uk.ac.ox.poseidon.core.time.TimeFactory {
-                          hour: 6,
-                          minute: 59,
-                          second: 59
-                        }
+                        referenceTime: !!uk.ac.ox.poseidon.core.providers.constant.ConstantProviderFactory
+                          object: !!uk.ac.ox.poseidon.core.time.TimeFactory {
+                            hour: 6,
+                            minute: 59,
+                            second: 59
+                          }
                     - !!uk.ac.ox.poseidon.core.predicates.ConditionFactory
                       extractor: !!uk.ac.ox.poseidon.core.providers.temporal.CurrentDayOfWeekProviderFactory {
                         }
                       predicate: !!uk.ac.ox.poseidon.core.predicates.InSetFactory
-                        values: !!uk.ac.ox.poseidon.core.utils.ObjectFactory
-                          value: !!set {
-                            !!java.time.DayOfWeek 'SUNDAY': null,
-                            !!java.time.DayOfWeek 'MONDAY': null,
-                            !!java.time.DayOfWeek 'TUESDAY': null,
-                            !!java.time.DayOfWeek 'WEDNESDAY': null,
-                            !!java.time.DayOfWeek 'THURSDAY': null
-                          }
+                        values: !!uk.ac.ox.poseidon.core.providers.constant.ConstantProviderFactory
+                          object: !!uk.ac.ox.poseidon.core.utils.ObjectFactory
+                            value: !!set {
+                              !!java.time.DayOfWeek 'SUNDAY': null,
+                              !!java.time.DayOfWeek 'MONDAY': null,
+                              !!java.time.DayOfWeek 'TUESDAY': null,
+                              !!java.time.DayOfWeek 'WEDNESDAY': null,
+                              !!java.time.DayOfWeek 'THURSDAY': null
+                            }
                 - !!uk.ac.ox.poseidon.agents.tasks.destinations.StartTripFactory
                   destinationSupplier: !!uk.ac.ox.poseidon.agents.choices.EpsilonGreedyDestinationSupplierFactory
                     epsilon: 0.2
