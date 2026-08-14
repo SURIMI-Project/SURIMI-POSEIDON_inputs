@@ -837,24 +837,50 @@ components:
     dataMappings: {
       behaviour.code: main_fishing_gear,
       gear.code: main_fishing_gear,
-      gear.defaultFactory.code: main_fishing_gear
+      gear.defaultFactory.code: main_fishing_gear,
+      engine.code: main_fishing_gear
     }
     deactivationEventCodes: [
       DES,
       EXP,
       RET
     ]
-    engine: !!uk.ac.ox.poseidon.agents.vessels.engines.SimpleEngineFactory
-      cruisingSpeed: !!uk.ac.ox.poseidon.core.quantities.SpeedFactory {
-        unitString: kn,
-        value: 9.5
-      }
-      fuelConsumedPerKm: !!uk.ac.ox.poseidon.core.quantities.VolumeFactory {
-        unitString: l,
-        value: 0.0
-      }
-      fuelTank: !!uk.ac.ox.poseidon.agents.vessels.engines.InfiniteFuelTankFactory {
+    engine: !!uk.ac.ox.poseidon.agents.vessels.VesselScopeFactoriesByCode
+      code: null
+      defaultFactory: !!uk.ac.ox.poseidon.agents.vessels.engines.SimpleEngineFactory
+        cruisingSpeed: !!uk.ac.ox.poseidon.core.quantities.SpeedFactory {
+          unitString: kn,
+          value: 0.0
         }
+        fuelConsumedPerKm: !!uk.ac.ox.poseidon.core.quantities.VolumeFactory {
+          unitString: l,
+          value: 0.0
+        }
+        fuelTank: !!uk.ac.ox.poseidon.agents.vessels.engines.InfiniteFuelTankFactory {
+          }
+      factories:
+        PS: !!uk.ac.ox.poseidon.agents.vessels.engines.SimpleEngineFactory
+          cruisingSpeed: !!uk.ac.ox.poseidon.core.quantities.SpeedFactory {
+            unitString: kn,
+            value: 9.5
+          }
+          fuelConsumedPerKm: !!uk.ac.ox.poseidon.core.quantities.VolumeFactory {
+            unitString: l,
+            value: 0.0
+          }
+          fuelTank: !!uk.ac.ox.poseidon.agents.vessels.engines.InfiniteFuelTankFactory {
+            }
+        OTB: !!uk.ac.ox.poseidon.agents.vessels.engines.SimpleEngineFactory
+          cruisingSpeed: !!uk.ac.ox.poseidon.core.quantities.SpeedFactory {
+            unitString: kn,
+            value: 9.0
+          }
+          fuelConsumedPerKm: !!uk.ac.ox.poseidon.core.quantities.VolumeFactory {
+            unitString: l,
+            value: 0.0
+          }
+          fuelTank: !!uk.ac.ox.poseidon.agents.vessels.engines.InfiniteFuelTankFactory {
+            }
     eventCodeColumn: event
     eventDateColumn: event_start_date
     extraFactories:
