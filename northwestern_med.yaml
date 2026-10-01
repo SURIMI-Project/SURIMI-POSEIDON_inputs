@@ -172,7 +172,7 @@ components:
         path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
           parent: *id001
           path: exclusion_grid.asc
-      modelGrid: !!uk.ac.ox.poseidon.geography.grids.ModelGridFromGridFile
+      modelGrid: !!uk.ac.ox.poseidon.geography.grids.ModelGridFromGridFileFactory
         gridFilePath: &id002 !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
           parent: *id001
           path: bathymetry_grid.asc
