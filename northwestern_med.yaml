@@ -378,7 +378,6 @@ components:
     steppable: !!eu.project.surimi.poseidon.regulations.TotalAllowableCatchQuotasFactory
       fleetSegmentMapper: !!eu.project.surimi.poseidon.server.fleet.FleetSegmentMapperFactory
         countryCodeTag: country_of_registration
-        model: POSEIDON
         scale: Industrial
         vesselLengthClassMapper: &id019 !!uk.ac.ox.poseidon.core.functions.NumericIntervalToStringMapperFactory
           intervals:
