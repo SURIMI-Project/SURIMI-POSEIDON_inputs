@@ -189,50 +189,29 @@ components:
           }
     modelGrid: *id004
     species: *id005
-  timeIndexedBiomassGridUpdates: !!uk.ac.ox.poseidon.biology.biomass.TimeIndexedBiomassGridUpdatesFactory
-    biomassGrids: &id019 !!uk.ac.ox.poseidon.biology.biomass.FisheableBiomassGridsFactory
-      biomassGrids: *id006
-    timeIndexedBiomassGrids: !!uk.ac.ox.poseidon.biology.biomass.TimeIndexedBiomassGridsFromNetCdfFactory
-      modelGrid: *id004
-      separator: _
-      species: *id005
-      timeIndexedNetCdfGridReader: !!uk.ac.ox.poseidon.geography.grids.TimeIndexedNetCdfGridReaderFactory
-        latitudeDimensionName: latitude
-        longitudeDimensionName: longitude
-        ncFilePath: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
-          parent: *id001
-          path: biomass_grids.nc
-        timeDimensionName: time
-  marketGrid: &id029 !!uk.ac.ox.poseidon.agents.market.BiomassMarketGridFromPriceTableFactory
-    categoryCodeColumn: category_code
-    currencyColumn: currency
-    data: !!uk.ac.ox.poseidon.io.tables.TableFromCsvFactory
-      dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
-        encoding: UTF-8
-        path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
-          parent: *id001
-          path: prices.csv
-    dateColumn: date
-    measurementUnitColumn: measurement_unit
-    portCodeColumn: market_code
-    portGrid: &id007 !!uk.ac.ox.poseidon.geography.ports.PortGridFactory
-      bathymetricGrid: *id003
-      distanceCalculator: &id012 !!uk.ac.ox.poseidon.geography.distance.HaversineDistanceCalculatorFactory
-        modelGrid: *id004
-      ports: !!uk.ac.ox.poseidon.geography.ports.PortsFromTableFactory
-        latitudeColumnName: lat
-        longitudeColumnName: lon
-        portCodeColumnName: port_code
-        portNameColumnName: port_name
-        table: !!uk.ac.ox.poseidon.io.tables.TableFromCsvFactory
-          dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
-            encoding: UTF-8
-            path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
-              parent: *id001
-              path: ports.csv
-    priceColumn: price
-    species: *id005
-    speciesCodeColumn: species_code
+  fisheableBiomassGrids: &id019 !!uk.ac.ox.poseidon.biology.biomass.FisheableBiomassGridsFactory
+    biomassGrids: *id006
+  marketGrid: &id029 !!uk.ac.ox.poseidon.agents.market.MarketGridFactory
+    markets: !!uk.ac.ox.poseidon.agents.market.OneBiomassMarketPerPortFactory
+      portGrid: &id007 !!uk.ac.ox.poseidon.geography.ports.PortGridFactory
+        bathymetricGrid: *id003
+        distanceCalculator: &id012 !!uk.ac.ox.poseidon.geography.distance.HaversineDistanceCalculatorFactory
+          modelGrid: *id004
+        ports: !!uk.ac.ox.poseidon.geography.ports.PortsFromTableFactory
+          latitudeColumnName: lat
+          longitudeColumnName: lon
+          portCodeColumnName: port_code
+          portNameColumnName: port_name
+          table: !!uk.ac.ox.poseidon.io.tables.TableFromCsvFactory
+            dataSource: !!uk.ac.ox.poseidon.io.sources.FileDataSourceFactory
+              encoding: UTF-8
+              path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
+                parent: *id001
+                path: ports.csv
+      pricesEntries: !!uk.ac.ox.poseidon.core.utils.ObjectFactory
+        value: [
+          ]
+    portGrid: *id007
   portGrid: *id007
   purseSeinerRegulations: &id015 !!uk.ac.ox.poseidon.regulations.ForbiddenIfFactory
     actionPredicate: !!uk.ac.ox.poseidon.core.predicates.logical.AnyOfFactory
