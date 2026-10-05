@@ -208,9 +208,6 @@ components:
               path: !!uk.ac.ox.poseidon.io.paths.RelativePathFactory
                 parent: *id001
                 path: ports.csv
-      pricesEntries: !!uk.ac.ox.poseidon.core.utils.ObjectFactory
-        value: [
-          ]
     portGrid: *id007
   portGrid: *id007
   purseSeinerRegulations: &id015 !!uk.ac.ox.poseidon.regulations.ForbiddenIfFactory
