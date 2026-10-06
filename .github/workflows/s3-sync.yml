@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v7
+        with:
+          # Without this, the LFS-tracked files are uploaded as pointer files
+          lfs: true
 
       - name: Sync to S3
         env:
