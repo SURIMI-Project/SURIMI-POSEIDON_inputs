@@ -23,7 +23,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_S3_ENDPOINT: "https://minio.dive.edito.eu"
           AWS_REGION: "waw3-1"
-          AWS_S3_PREFIX: "surimi-poseidon"
+          AWS_S3_PREFIX: "poseidon"
         run: |
           # Avoid multipart upload on S3-compatible backends that reject it
           aws configure set default.s3.multipart_threshold 5GB
