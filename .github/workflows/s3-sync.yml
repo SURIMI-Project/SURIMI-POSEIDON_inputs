@@ -9,12 +9,18 @@ jobs:
   sync:
     runs-on: ubuntu-latest
 
+    env:
+      # Read only by local runs and calibration, never by the deployed service (the controller
+      # sends biomass and prices), so they are neither downloaded from LFS nor synced
+      LOCAL_ONLY: "northwestern_med/biomass_grids.nc,northwestern_med/prices.csv,northwestern_med/target_landings.csv"
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v7
-        with:
-          # Without this, the LFS-tracked files are uploaded as pointer files
-          lfs: true
+
+      - name: Fetch the LFS files to sync
+        # Without this, the LFS-tracked files are uploaded as pointer files
+        run: git lfs pull --exclude="${LOCAL_ONLY}"
 
       - name: Sync to S3
         env:
@@ -30,9 +36,17 @@ jobs:
           aws configure set default.s3.multipart_chunksize 5GB
           aws configure set default.s3.max_concurrent_requests 1
 
+          local_only_excludes=()
+          IFS=, read -ra local_only <<< "${LOCAL_ONLY}"
+          for path in "${local_only[@]}"; do
+            local_only_excludes+=(--exclude "${path}")
+          done
+
+          # --delete leaves excluded files alone: one already in the bucket must be removed there
           aws s3 sync . "s3://${AWS_S3_BUCKET}/${AWS_S3_PREFIX}/" \
             --endpoint-url "${AWS_S3_ENDPOINT}" \
             --region "${AWS_REGION}" \
             --delete \
             --exclude ".git/*" \
-            --exclude ".github/*"
+            --exclude ".github/*" \
+            "${local_only_excludes[@]}"
