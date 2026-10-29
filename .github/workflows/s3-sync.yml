@@ -13,7 +13,7 @@ jobs:
       # Read only by local runs and calibration, never by the deployed service (the controller
       # sends biomass and prices, and Anchovy Bay is not served yet), so they are neither
       # downloaded from LFS nor synced
-      LOCAL_ONLY: "northwestern_med/biomass_grids.nc,northwestern_med/prices.csv,northwestern_med/target_landings.csv,anchovy_bay/anchovy_bay.eiixml"
+      LOCAL_ONLY: "northwestern_med/biomass_grids.nc,northwestern_med/prices.csv,northwestern_med/target_landings.csv,anchovy_bay/anchovy_bay.eiixml,anchovy_bay/anchovy_bay.sqlite"
 
     steps:
       - name: Checkout repo
