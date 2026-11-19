@@ -20,7 +20,7 @@ This data is licensed under the [Creative Commons Attribution 4.0 International 
 | ---- | ------------ |
 | `bathymetry_grid.asc`, `exclusion_grid.asc` | NWMed EwE model grid; GEBCO (land elevations only) |
 | `french_eez.asc` | NWMed EwE model grid; GEBCO; Marine Regions EEZ |
-| `habitat_grids.nc` | NWMed EwE model grid; habitat maps |
+| `habitat_grids.nc` | NWMed EwE model grid and habitat maps |
 | `mpa_grids.nc`, `mpa_months.csv`, `mpa_fleet_restrictions.csv` | NWMed EwE model grid; MPA closures |
 | `port_closures.csv` | Port closures |
 | `biomass_grids.nc` | NWMed EwE model and Ecospace biomass maps; FAO ASFIS; FDI |
@@ -30,8 +30,8 @@ This data is licensed under the [Creative Commons Attribution 4.0 International 
 | `prices.csv` | EMODnet first sales; EU Fleet Register; GFCM geographical subareas; NWMed EwE model; FAO ASFIS |
 | `operating_costs.csv` | STECF Annual Economic Report |
 
-**NWMed EwE model** (Ecopath with Ecosim model of the northwestern Mediterranean, its Ecospace grid and
-biomass maps), by Marta Coll, Jeroen Steenbeek and colleagues:
+**NWMed EwE model** (Ecopath with Ecosim model of the northwestern Mediterranean, its Ecospace grid, habitat
+maps and biomass maps), by Marta Coll, Jeroen Steenbeek and colleagues:
 
 - Corrales, X., Coll, M., Tecchio, S., Bellido, J.M., Fernández, Á.M., Palomera, I. (2015). Ecosystem
   structure and fishing impacts in the northwestern Mediterranean Sea using a food web model within a
@@ -41,7 +41,7 @@ biomass maps), by Marta Coll, Jeroen Steenbeek and colleagues:
   projections and report. *FutureMARES Deliverable Report* 4(4), 1–285.
   https://digital.csic.es/handle/10261/412296
 
-**Habitat maps, MPA closures and port closures**: provided by Miquel Ortega (Institut de Ciències del Mar, ICM-CSIC).
+**MPA closures and port closures**: provided by Miquel Ortega (Institut de Ciències del Mar, ICM-CSIC).
 
 **GEBCO**: GEBCO Compilation Group (2025) GEBCO 2025 Grid (doi:10.5285/37c52e96-24ea-67ce-e063-7086abc05f29).
 Public domain. Not to be used for navigation.
