@@ -69,3 +69,13 @@ https://webgate.ec.europa.eu/fleet-europa/search_en
 
 **GFCM geographical subareas**: FAO General Fisheries Commission for the Mediterranean.
 https://www.fao.org/gfcm/data/maps/gsas/en/. Used only to select ports; no GSA geometry is published here.
+
+### Anchovy Bay (`anchovy_bay/`)
+
+| File | Derived from |
+| ---- | ------------ |
+| `anchovy_bay.eiixml` | Anchovy Bay EwE model (copied unchanged) |
+| `species.csv`, `ports.csv` | Anchovy Bay EwE model; codes and port names made up by the pipeline |
+
+**Anchovy Bay EwE model**: the EwE standard Anchovy Bay example model.
+`anchovy_bay.sqlite` is another save of the same model and is not read by the pipeline.
