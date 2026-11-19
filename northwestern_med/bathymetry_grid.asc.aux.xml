@@ -3,7 +3,7 @@
     <MDI key="AREA_OR_POINT">Area</MDI>
   </Metadata>
   <PAMRasterBand band="1">
-    <Description>NWMed_basemap_grid</Description>
+    <Description>depth</Description>
     <Metadata>
       <MDI key="STATISTICS_MAXIMUM">3254</MDI>
       <MDI key="STATISTICS_MEAN">-9999</MDI>
