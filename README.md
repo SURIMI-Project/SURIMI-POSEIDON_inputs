@@ -74,10 +74,8 @@ https://www.fao.org/gfcm/data/maps/gsas/en/. Used only to select ports; no GSA g
 
 | File | Derived from |
 | ---- | ------------ |
-| `anchovy_bay.eiixml` | Anchovy Bay EwE model (copied unchanged) |
 | `species.csv`, `ports.csv` | Anchovy Bay EwE model; codes and port names made up by the pipeline |
 | `bathymetry_grid.asc` | Anchovy Bay EwE model: the `DepthMap` of the `BayOfAnchovies` Ecospace scenario, as elevation (minus the depth, land 0) |
 | `exclusion_grid.asc` | Anchovy Bay EwE model: the `ExclusionMap` of the `BayOfAnchovies` Ecospace scenario (0 for a cell in the model, -1 for an excluded one) |
 
 **Anchovy Bay EwE model**: the EwE standard Anchovy Bay example model.
-`anchovy_bay.sqlite` is another save of the same model and is not read by the pipeline.
