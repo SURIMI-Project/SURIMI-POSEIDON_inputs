@@ -1,0 +1,111 @@
+fleet_name,parameter,value,reason
+Bait boats,average_price_eur_per_kg,1.5,Unsourced: target average for scaling the model's relative prices
+Bait boats,clique_size,10,"Unsourced: fixed starting clique size, not calibrated"
+Bait boats,discard_ratio,0,Zero discards: catches equal landings in this demonstration
+Bait boats,fishing_hours,night,"Unsourced: light-assisted fisheries at night, seal hunting in daylight"
+Bait boats,full_hold_threshold,1,End a trip at full capacity; overflow is returned alive
+Bait boats,hold_capacity_kg,5000,"Assumed multi-day vessel capacity; plausible gear-specific size, not measured"
+Bait boats,hold_fill_per_trip,0.8,Unsourced: nominal catch is 80% of the hold per trip
+Bait boats,hours_at_sea_per_trip,48,Unsourced: nominal multi-day trip duration for fleet sizing and costs
+Bait boats,hours_fishing_per_trip,8,Unsourced: nominal fishing time within each trip for cost rates
+Bait boats,hours_in_port,24,Unsourced: one day between multi-day trips
+Bait boats,placeholder_catchability,1e-05,"Unsourced: positive placeholder only for landed pairs, to be calibrated"
+Bait boats,port_discount_scale,1,"Unsourced: exponential round-trip straight-line travel-time discount, scaled by nominal hours at sea"
+Bait boats,profit_margin_max,0.3,Unsourced: post-calibration acceptable profit margin is 10-30%
+Bait boats,profit_margin_min,0.1,Unsourced: post-calibration acceptable profit margin is 10-30%
+Bait boats,season_months,1:12,"Unsourced: spring sealing season, other fleets year-round"
+Bait boats,set_hours,2,Unsourced: fixed duration of one gear operation
+Bait boats,speed_knots,8,Unsourced: representative steaming speed; no separate towing speed
+Bait boats,start_date,2000-01-01,Unsourced placeholder: January aligns seasonal months; year is a label
+Bait boats,trip_limit_hours,72,Unsourced: maximum duration of a multi-day trip
+Bait boats,trips_per_year,80,Unsourced: nominal trip cycle with allowance for lost days; sealers have two months
+Bait boats,trips_relative_tolerance,0.25,Unsourced: post-calibration trips must be within 25% of nominal
+Bait boats,vessel_name,Bait boat,Invented display name for numbered vessels
+Sealers,average_price_eur_per_kg,1.5,Unsourced: target average for scaling the model's relative prices
+Sealers,clique_size,10,"Unsourced: fixed starting clique size, not calibrated"
+Sealers,discard_ratio,0,Zero discards: catches equal landings in this demonstration
+Sealers,fishing_hours,daylight,"Unsourced: light-assisted fisheries at night, seal hunting in daylight"
+Sealers,full_hold_threshold,1,End a trip at full capacity; overflow is returned alive
+Sealers,hold_capacity_kg,5000,"Assumed multi-day vessel capacity; plausible gear-specific size, not measured"
+Sealers,hold_fill_per_trip,0.8,Unsourced: nominal catch is 80% of the hold per trip
+Sealers,hours_at_sea_per_trip,168,Unsourced: nominal multi-day trip duration for fleet sizing and costs
+Sealers,hours_fishing_per_trip,36,Unsourced: nominal fishing time within each trip for cost rates
+Sealers,hours_in_port,24,Unsourced: one day between multi-day trips
+Sealers,placeholder_catchability,1e-05,"Unsourced: positive placeholder only for landed pairs, to be calibrated"
+Sealers,port_discount_scale,1,"Unsourced: exponential round-trip straight-line travel-time discount, scaled by nominal hours at sea"
+Sealers,profit_margin_max,0.3,Unsourced: post-calibration acceptable profit margin is 10-30%
+Sealers,profit_margin_min,0.1,Unsourced: post-calibration acceptable profit margin is 10-30%
+Sealers,season_months,"3,4","Unsourced: spring sealing season, other fleets year-round"
+Sealers,set_hours,6,Unsourced: fixed duration of one gear operation
+Sealers,speed_knots,9,Unsourced: representative steaming speed; no separate towing speed
+Sealers,start_date,2000-01-01,Unsourced placeholder: January aligns seasonal months; year is a label
+Sealers,trip_limit_hours,168,Unsourced: maximum duration of a multi-day trip
+Sealers,trips_per_year,7,Unsourced: nominal trip cycle with allowance for lost days; sealers have two months
+Sealers,trips_relative_tolerance,0.25,Unsourced: post-calibration trips must be within 25% of nominal
+Sealers,vessel_name,Sealer,Invented display name for numbered vessels
+Seiners,average_price_eur_per_kg,1.5,Unsourced: target average for scaling the model's relative prices
+Seiners,clique_size,10,"Unsourced: fixed starting clique size, not calibrated"
+Seiners,discard_ratio,0,Zero discards: catches equal landings in this demonstration
+Seiners,fishing_hours,night,"Unsourced: light-assisted fisheries at night, seal hunting in daylight"
+Seiners,full_hold_threshold,1,End a trip at full capacity; overflow is returned alive
+Seiners,hold_capacity_kg,60000,"Assumed multi-day vessel capacity; plausible gear-specific size, not measured"
+Seiners,hold_fill_per_trip,0.8,Unsourced: nominal catch is 80% of the hold per trip
+Seiners,hours_at_sea_per_trip,48,Unsourced: nominal multi-day trip duration for fleet sizing and costs
+Seiners,hours_fishing_per_trip,8,Unsourced: nominal fishing time within each trip for cost rates
+Seiners,hours_in_port,24,Unsourced: one day between multi-day trips
+Seiners,placeholder_catchability,1e-05,"Unsourced: positive placeholder only for landed pairs, to be calibrated"
+Seiners,port_discount_scale,1,"Unsourced: exponential round-trip straight-line travel-time discount, scaled by nominal hours at sea"
+Seiners,profit_margin_max,0.3,Unsourced: post-calibration acceptable profit margin is 10-30%
+Seiners,profit_margin_min,0.1,Unsourced: post-calibration acceptable profit margin is 10-30%
+Seiners,season_months,1:12,"Unsourced: spring sealing season, other fleets year-round"
+Seiners,set_hours,2,Unsourced: fixed duration of one gear operation
+Seiners,speed_knots,10,Unsourced: representative steaming speed; no separate towing speed
+Seiners,start_date,2000-01-01,Unsourced placeholder: January aligns seasonal months; year is a label
+Seiners,trip_limit_hours,72,Unsourced: maximum duration of a multi-day trip
+Seiners,trips_per_year,80,Unsourced: nominal trip cycle with allowance for lost days; sealers have two months
+Seiners,trips_relative_tolerance,0.25,Unsourced: post-calibration trips must be within 25% of nominal
+Seiners,vessel_name,Seiner,Invented display name for numbered vessels
+Shrimpers,average_price_eur_per_kg,1.5,Unsourced: target average for scaling the model's relative prices
+Shrimpers,clique_size,10,"Unsourced: fixed starting clique size, not calibrated"
+Shrimpers,discard_ratio,0,Zero discards: catches equal landings in this demonstration
+Shrimpers,fishing_hours,all,"Unsourced: light-assisted fisheries at night, seal hunting in daylight"
+Shrimpers,full_hold_threshold,1,End a trip at full capacity; overflow is returned alive
+Shrimpers,hold_capacity_kg,10000,"Assumed multi-day vessel capacity; plausible gear-specific size, not measured"
+Shrimpers,hold_fill_per_trip,0.8,Unsourced: nominal catch is 80% of the hold per trip
+Shrimpers,hours_at_sea_per_trip,48,Unsourced: nominal multi-day trip duration for fleet sizing and costs
+Shrimpers,hours_fishing_per_trip,30,Unsourced: nominal fishing time within each trip for cost rates
+Shrimpers,hours_in_port,24,Unsourced: one day between multi-day trips
+Shrimpers,placeholder_catchability,1e-05,"Unsourced: positive placeholder only for landed pairs, to be calibrated"
+Shrimpers,port_discount_scale,1,"Unsourced: exponential round-trip straight-line travel-time discount, scaled by nominal hours at sea"
+Shrimpers,profit_margin_max,0.3,Unsourced: post-calibration acceptable profit margin is 10-30%
+Shrimpers,profit_margin_min,0.1,Unsourced: post-calibration acceptable profit margin is 10-30%
+Shrimpers,season_months,1:12,"Unsourced: spring sealing season, other fleets year-round"
+Shrimpers,set_hours,3,Unsourced: fixed duration of one gear operation
+Shrimpers,speed_knots,9,Unsourced: representative steaming speed; no separate towing speed
+Shrimpers,start_date,2000-01-01,Unsourced placeholder: January aligns seasonal months; year is a label
+Shrimpers,trip_limit_hours,72,Unsourced: maximum duration of a multi-day trip
+Shrimpers,trips_per_year,80,Unsourced: nominal trip cycle with allowance for lost days; sealers have two months
+Shrimpers,trips_relative_tolerance,0.25,Unsourced: post-calibration trips must be within 25% of nominal
+Shrimpers,vessel_name,Shrimper,Invented display name for numbered vessels
+Trawlers,average_price_eur_per_kg,1.5,Unsourced: target average for scaling the model's relative prices
+Trawlers,clique_size,10,"Unsourced: fixed starting clique size, not calibrated"
+Trawlers,discard_ratio,0,Zero discards: catches equal landings in this demonstration
+Trawlers,fishing_hours,all,"Unsourced: light-assisted fisheries at night, seal hunting in daylight"
+Trawlers,full_hold_threshold,1,End a trip at full capacity; overflow is returned alive
+Trawlers,hold_capacity_kg,20000,"Assumed multi-day vessel capacity; plausible gear-specific size, not measured"
+Trawlers,hold_fill_per_trip,0.8,Unsourced: nominal catch is 80% of the hold per trip
+Trawlers,hours_at_sea_per_trip,96,Unsourced: nominal multi-day trip duration for fleet sizing and costs
+Trawlers,hours_fishing_per_trip,72,Unsourced: nominal fishing time within each trip for cost rates
+Trawlers,hours_in_port,24,Unsourced: one day between multi-day trips
+Trawlers,placeholder_catchability,1e-05,"Unsourced: positive placeholder only for landed pairs, to be calibrated"
+Trawlers,port_discount_scale,1,"Unsourced: exponential round-trip straight-line travel-time discount, scaled by nominal hours at sea"
+Trawlers,profit_margin_max,0.3,Unsourced: post-calibration acceptable profit margin is 10-30%
+Trawlers,profit_margin_min,0.1,Unsourced: post-calibration acceptable profit margin is 10-30%
+Trawlers,season_months,1:12,"Unsourced: spring sealing season, other fleets year-round"
+Trawlers,set_hours,4,Unsourced: fixed duration of one gear operation
+Trawlers,speed_knots,10,Unsourced: representative steaming speed; no separate towing speed
+Trawlers,start_date,2000-01-01,Unsourced placeholder: January aligns seasonal months; year is a label
+Trawlers,trip_limit_hours,96,Unsourced: maximum duration of a multi-day trip
+Trawlers,trips_per_year,50,Unsourced: nominal trip cycle with allowance for lost days; sealers have two months
+Trawlers,trips_relative_tolerance,0.25,Unsourced: post-calibration trips must be within 25% of nominal
+Trawlers,vessel_name,Trawler,Invented display name for numbered vessels
